@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="760" viewBox="0 0 600 760" fill="none">
+  <rect width="600" height="760" rx="32" fill="white"/>
+  <rect x="1" y="1" width="598" height="758" rx="31" stroke="#D4D4D8" stroke-width="2"/>
+  <text x="300" y="82" text-anchor="middle" font-family="Arial" font-size="40" font-weight="700" fill="#18181B">QRIS</text>
+  <text x="300" y="122" text-anchor="middle" font-family="Arial" font-size="18" fill="#71717A">Ganti melalui Superadmin → Settings</text>
+  <g fill="#18181B">
+    <rect x="100" y="170" width="120" height="120"/><rect x="125" y="195" width="70" height="70" fill="white"/><rect x="145" y="215" width="30" height="30"/>
+    <rect x="380" y="170" width="120" height="120"/><rect x="405" y="195" width="70" height="70" fill="white"/><rect x="425" y="215" width="30" height="30"/>
+    <rect x="100" y="450" width="120" height="120"/><rect x="125" y="475" width="70" height="70" fill="white"/><rect x="145" y="495" width="30" height="30"/>
+    <path d="M260 170h40v40h-40zM320 170h30v70h-30zM260 230h50v30h-50zM340 270h40v40h-40zM240 320h60v40h-60zM320 330h30v80h-30zM370 330h80v30h-80zM460 320h40v70h-40zM250 390h50v50h-50zM360 390h80v40h-80zM240 470h60v30h-60zM320 450h40v90h-40zM380 460h120v30H380zM260 530h50v40h-50zM370 520h50v50h-50zM440 520h60v60h-60z"/>
+  </g>
+  <text x="300" y="660" text-anchor="middle" font-family="Arial" font-size="23" font-weight="700" fill="#18181B">QRIS TOKO ANDA</text>
+  <text x="300" y="700" text-anchor="middle" font-family="Arial" font-size="17" fill="#71717A">Placeholder — bukan QR pembayaran aktif</text>
+</svg>
