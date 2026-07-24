@@ -52,10 +52,14 @@ class AuthController extends Controller
             'phone' => ['required', 'string', 'max:30'],
             'store_name' => ['nullable', 'string', 'max:190'],
             'address' => ['required', 'string', 'max:1000'],
-            'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()],
+            'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)->letters()],
+        ], [
+            'password.min' => 'Password untuk akun minimal harus 8 karakter.',
+            'password.letters' => 'Password wajib mengandung setidaknya satu huruf.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.'
         ]);
 
-        $data['role'] = UserRole::USER;
+        $data['role'] = UserRole::RESSELLER;
         $data['is_active'] = true;
         $user = User::create($data);
         Auth::login($user);

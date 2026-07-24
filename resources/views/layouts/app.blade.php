@@ -180,11 +180,12 @@
         </div>
     @endif
 
-    @if($errors->any())
+    <!-- Tambahkan pengecualian rute menggunakan !request()->routeIs() -->
+    @if($errors->any() && !request()->routeIs('register', 'login'))
         <div data-flash class="site-shell pt-3">
             <div class="alert alert-danger">
                 <strong>Periksa kembali data berikut:</strong>
-                <ul class="mt-2 list-disc pl-5">
+                <ul class="mt-2 list-disc pl-8">
                     @foreach($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
