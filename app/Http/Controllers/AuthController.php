@@ -103,6 +103,10 @@ class AuthController extends Controller
             'username.regex' => 'Username hanya boleh berisi huruf kecil, angka, titik, dan garis bawah.',
             'username.unique' => 'Username tersebut sudah digunakan.',
             'email.unique' => 'Email tersebut sudah terdaftar.',
+            'password.min' => 'Password minimal harus 8 karakter.',
+            'password.letters' => 'Password wajib mengandung setidaknya satu huruf.',
+            'password.numbers' => 'Password wajib mengandung setidaknya satu angka.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.'
         ]);
 
         $data['role'] = UserRole::USER;
