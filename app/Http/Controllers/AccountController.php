@@ -54,6 +54,10 @@ class AccountController extends Controller
             ],
         ], [
             'username.regex' => 'Username hanya boleh berisi huruf kecil, angka, titik, dan garis bawah.',
+            'password.min' => 'Password baru minimal harus 8 karakter.',
+            'password.letters' => 'Password baru wajib mengandung setidaknya satu huruf.',
+            'password.numbers' => 'Password baru wajib mengandung setidaknya satu angka.',
+            'password.confirmed' => 'Konfirmasi password baru tidak cocok.'
         ]);
 
         if (blank($data['password'] ?? null)) {
