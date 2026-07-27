@@ -12,9 +12,10 @@
                         class="mx-auto h-12 w-12"
                         alt="Logo"
                     >
+
                     <h1 class="mt-5 text-2xl font-bold">Masuk ke akun</h1>
                     <p class="text-muted mt-2">
-                        Checkout dan pantau invoice reseller Anda.
+                        Gunakan username atau email yang sudah terdaftar.
                     </p>
                 </div>
 
@@ -35,14 +36,17 @@
                     @csrf
 
                     <div class="field">
-                        <label class="label" for="email">Email</label>
+                        <label class="label" for="login">
+                            Username atau Email
+                        </label>
                         <input
-                            id="email"
+                            id="login"
                             class="input"
-                            type="email"
-                            name="email"
-                            value="{{ old('email') }}"
-                            autocomplete="email"
+                            type="text"
+                            name="login"
+                            value="{{ old('login') }}"
+                            placeholder="username atau nama@gmail.com"
+                            autocomplete="username"
                             required
                             autofocus
                         >
@@ -70,7 +74,10 @@
 
                 <p class="mt-6 text-center text-sm text-zinc-500">
                     Belum memiliki akun?
-                    <a class="font-bold text-zinc-950" href="{{ route('register') }}">
+                    <a
+                        class="font-bold text-zinc-950"
+                        href="{{ route('register') }}"
+                    >
                         Daftar reseller
                     </a>
                 </p>

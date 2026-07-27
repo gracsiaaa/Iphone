@@ -13,10 +13,19 @@ class UserFactory extends Factory
 
     public function definition(): array
     {
+        $username = Str::lower(fake()->unique()->userName());
+        $username = preg_replace('/[^a-z0-9._]+/', '.', $username) ?: 'user';
+        $username = trim($username, '._');
+
+        if (strlen($username) < 4) {
+            $username .= '.user';
+        }
+
         return [
             'name' => fake()->name(),
+            'username' => Str::limit($username, 30, ''),
             'email' => fake()->unique()->safeEmail(),
-            'phone' => fake()->numerify('08##########'),
+            'phone' => null,
             'store_name' => fake()->company(),
             'address' => fake()->address(),
             'email_verified_at' => now(),
