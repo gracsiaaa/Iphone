@@ -94,13 +94,6 @@ class AuthController extends Controller
             ],
             'store_name' => ['nullable', 'string', 'max:190'],
             'address' => ['required', 'string', 'max:1000'],
-<<<<<<< HEAD
-            'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)->letters()],
-        ], [
-            'password.min' => 'Password untuk akun minimal harus 8 karakter.',
-            'password.letters' => 'Password wajib mengandung setidaknya satu huruf.',
-            'password.confirmed' => 'Konfirmasi password tidak cocok.'
-=======
             'password' => [
                 'required',
                 'confirmed',
@@ -110,10 +103,9 @@ class AuthController extends Controller
             'username.regex' => 'Username hanya boleh berisi huruf kecil, angka, titik, dan garis bawah.',
             'username.unique' => 'Username tersebut sudah digunakan.',
             'email.unique' => 'Email tersebut sudah terdaftar.',
->>>>>>> 894485d293fc4d59e5b1b756c536db058181fc6e
         ]);
 
-        $data['role'] = UserRole::RESSELLER;
+        $data['role'] = UserRole::USER;
         $data['is_active'] = true;
 
         $user = User::create($data);

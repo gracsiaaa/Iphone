@@ -24,7 +24,7 @@
                 @if ($errors->any())
                     <div class="mt-6 p-4 bg-red-50 rounded-md border border-red-200">
                         <p class="font-bold text-sm text-red-600">Gagal masuk:</p>
-                        <ul class="text-sm text-red-500 list-disc list-inside mt-1">
+                        <ul class="text-sm text-red-500 mt-1">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
