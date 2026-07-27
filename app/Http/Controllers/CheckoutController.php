@@ -11,20 +11,47 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use RuntimeException;
 use Throwable;
 
 class CheckoutController extends Controller
 {
     public function create(Request $request): View|RedirectResponse
     {
-        [$items, $total] = CartController::resolveCart($request);
-        if ($items->isEmpty()) return redirect()->route('cart.index')->with('error', 'Keranjang masih kosong.');
-        return view('checkout.create', compact('items', 'total'));
+        [$items, $total, $totalQuantity] = CartController::resolveCart($request);
+
+        if ($items->isEmpty()) {
+            return redirect()
+                ->route('cart.index')
+                ->with('error', 'Keranjang masih kosong.');
+        }
+
+        $minimumQuantity = (int) config('shop.minimum_order_quantity', 10);
+
+        if ($totalQuantity < $minimumQuantity) {
+            $remainingQuantity = $minimumQuantity - $totalQuantity;
+
+            return redirect()
+                ->route('cart.index')
+                ->with(
+                    'error',
+                    "Minimal pembelian adalah {$minimumQuantity} unit. Tambahkan {$remainingQuantity} unit lagi."
+                );
+        }
+
+        return view('checkout.create', [
+            'items' => $items,
+            'total' => $total,
+            'totalQuantity' => $totalQuantity,
+            'minimumQuantity' => $minimumQuantity,
+        ]);
     }
 
-    public function store(Request $request, InvoiceNumberService $invoiceService): RedirectResponse
-    {
-        $data = $request->validate([
+    public function store(
+        Request $request,
+        InvoiceNumberService $invoiceNumberService
+    ): RedirectResponse {
+        $customerData = $request->validate([
             'customer_name' => ['required', 'string', 'max:120'],
             'customer_email' => ['required', 'email', 'max:190'],
             'customer_phone' => ['required', 'string', 'max:30'],
@@ -34,34 +61,80 @@ class CheckoutController extends Controller
         ]);
 
         $cart = $request->session()->get('cart', []);
-        if (!$cart) return redirect()->route('cart.index')->with('error', 'Keranjang masih kosong.');
+
+        if (empty($cart)) {
+            return redirect()
+                ->route('cart.index')
+                ->with('error', 'Keranjang masih kosong.');
+        }
 
         try {
-            $order = DB::transaction(function () use ($cart, $data, $request, $invoiceService) {
-                $products = Product::query()->whereIn('id', array_keys($cart))->lockForUpdate()->get()->keyBy('id');
-                $prepared = collect();
-                $total = 0;
+            $order = DB::transaction(function () use (
+                $cart,
+                $customerData,
+                $request,
+                $invoiceNumberService
+            ): Order {
+                $products = Product::query()
+                    ->whereIn('id', array_keys($cart))
+                    ->lockForUpdate()
+                    ->get()
+                    ->keyBy('id');
+
+                $preparedItems = collect();
+                $total = 0.0;
+                $totalQuantity = 0;
+                $minimumQuantity = (int) config(
+                    'shop.minimum_order_quantity',
+                    10
+                );
 
                 foreach ($cart as $productId => $quantity) {
                     $product = $products->get((int) $productId);
-                    if (!$product || !$product->is_active || $quantity < 1 || $product->stock < $quantity) {
-                        throw new \RuntimeException('Stok salah satu produk sudah berubah. Periksa kembali keranjang Anda.');
+                    $quantity = (int) $quantity;
+
+                    if (
+                        ! $product ||
+                        ! $product->is_active ||
+                        $quantity < 1 ||
+                        $product->stock < $quantity
+                    ) {
+                        throw new RuntimeException(
+                            'Stok salah satu produk telah berubah. Periksa kembali keranjang Anda.'
+                        );
                     }
-                    $subtotal = (float) $product->price * (int) $quantity;
+
+                    $subtotal = (float) $product->price * $quantity;
+
                     $total += $subtotal;
-                    $prepared->push(compact('product', 'quantity', 'subtotal'));
+                    $totalQuantity += $quantity;
+
+                    $preparedItems->push([
+                        'product' => $product,
+                        'quantity' => $quantity,
+                        'subtotal' => $subtotal,
+                    ]);
                 }
 
-                $order = Order::create(array_merge($data, [
+                // Validasi utama di backend agar tidak bisa dilewati dari browser.
+                if ($totalQuantity < $minimumQuantity) {
+                    throw new RuntimeException(
+                        "Minimal pembelian adalah {$minimumQuantity} unit. " .
+                        "Jumlah keranjang Anda hanya {$totalQuantity} unit."
+                    );
+                }
+
+                $order = Order::create(array_merge($customerData, [
                     'user_id' => $request->user()->id,
-                    'invoice_number' => $invoiceService->generate(),
+                    'invoice_number' => $invoiceNumberService->generate(),
                     'status' => OrderStatus::PENDING_PAYMENT,
                     'subtotal' => $total,
                     'total' => $total,
                 ]));
 
-                foreach ($prepared as $row) {
-                    $product = $row['product'];
+                foreach ($preparedItems as $item) {
+                    $product = $item['product'];
+
                     $order->items()->create([
                         'product_id' => $product->id,
                         'product_name' => $product->name,
@@ -69,46 +142,89 @@ class CheckoutController extends Controller
                         'product_color' => $product->color,
                         'product_capacity' => $product->capacity,
                         'price' => $product->price,
-                        'quantity' => $row['quantity'],
-                        'subtotal' => $row['subtotal'],
+                        'quantity' => $item['quantity'],
+                        'subtotal' => $item['subtotal'],
                     ]);
-                    $product->decrement('stock', $row['quantity']);
+
+                    // Stok dicadangkan ketika invoice dibuat.
+                    $product->decrement('stock', $item['quantity']);
                 }
 
-                Payment::create(['order_id' => $order->id, 'method' => 'qris', 'amount' => $total, 'status' => 'pending']);
+                Payment::create([
+                    'order_id' => $order->id,
+                    'method' => 'qris',
+                    'amount' => $total,
+                    'status' => 'pending',
+                ]);
+
                 return $order;
             });
-        } catch (Throwable $e) {
-            report($e);
-            return redirect()->route('cart.index')->with('error', $e instanceof \RuntimeException ? $e->getMessage() : 'Checkout gagal diproses.');
+        } catch (Throwable $exception) {
+            report($exception);
+
+            $message = $exception instanceof RuntimeException
+                ? $exception->getMessage()
+                : 'Checkout gagal diproses. Silakan coba kembali.';
+
+            return redirect()
+                ->route('cart.index')
+                ->with('error', $message);
         }
 
         $request->session()->forget('cart');
-        return redirect()->route('orders.show', $order)->with('success', 'Invoice berhasil dibuat. Silakan lakukan pembayaran QRIS.');
+
+        return redirect()
+            ->route('orders.show', $order)
+            ->with(
+                'success',
+                'Invoice berhasil dibuat. Silakan lakukan pembayaran melalui QRIS.'
+            );
     }
 
-    public function confirmPayment(Request $request, Order $order): RedirectResponse
-    {
+    public function confirmPayment(
+        Request $request,
+        Order $order
+    ): RedirectResponse {
         abort_unless($order->user_id === $request->user()->id, 403);
-        abort_unless($order->status === OrderStatus::PENDING_PAYMENT, 422, 'Pembayaran tidak dapat dikonfirmasi pada status ini.');
 
-        $data = $request->validate([
-            'proof' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+        abort_unless(
+            $order->status === OrderStatus::PENDING_PAYMENT,
+            422,
+            'Pembayaran tidak dapat dikonfirmasi pada status ini.'
+        );
+
+        $validated = $request->validate([
+            'proof' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:4096',
+            ],
             'payment_note' => ['nullable', 'string', 'max:500'],
         ]);
 
+        $proofPath = null;
+
         if ($request->hasFile('proof')) {
-            $data['proof_path'] = $request->file('proof')->store('payments', 'public');
+            $proofPath = $request
+                ->file('proof')
+                ->store('payments', 'public');
         }
 
         $order->payment()->update([
             'status' => 'waiting_verification',
-            'proof_path' => $data['proof_path'] ?? null,
+            'proof_path' => $proofPath,
             'confirmed_at' => now(),
-            'admin_note' => $data['payment_note'] ?? null,
+            'admin_note' => $validated['payment_note'] ?? null,
         ]);
-        $order->update(['status' => OrderStatus::WAITING_VERIFICATION]);
 
-        return back()->with('success', 'Konfirmasi pembayaran dikirim dan sedang diperiksa Admin.');
+        $order->update([
+            'status' => OrderStatus::WAITING_VERIFICATION,
+        ]);
+
+        return back()->with(
+            'success',
+            'Konfirmasi pembayaran telah dikirim dan sedang diperiksa Admin.'
+        );
     }
 }

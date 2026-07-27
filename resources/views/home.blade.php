@@ -60,11 +60,6 @@
                                 alt="Stok iPhone reseller"
                             >
                         </div>
-
-                        <div class="surface absolute -bottom-5 -left-3 p-4 text-zinc-950 sm:-left-6">
-                            <p class="meta-text">Stok diperbarui</p>
-                            <p class="mt-1 text-sm font-bold">Langsung dari Admin</p>
-                        </div>
                     </div>
                 </div>
             </div>
