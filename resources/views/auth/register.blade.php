@@ -13,6 +13,17 @@
                         Nomor telepon akan diminta saat melakukan checkout.
                     </p>
                 </div>
+            
+                @if ($errors->any())
+                    <div class="mb-8 p-4 bg-red-50 rounded-lg border border-red-200">
+                        <p class="font-bold text-sm text-red-600">Periksa kembali data berikut:</p>
+                        <ul class="text-sm text-red-500 mt-2">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <form
                     action="{{ route('register.store') }}"
