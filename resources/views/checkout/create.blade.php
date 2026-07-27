@@ -3,134 +3,162 @@
 @section('title', 'Checkout')
 
 @section('content')
-    <section class="page-section">
-        <div class="site-shell">
-            <div class="mb-8">
-                <p class="eyebrow">Checkout</p>
-                <h1 class="page-title mt-2">Konfirmasi data dan buat invoice</h1>
+<section class="container-site py-10 lg:py-14">
+    <div class="mb-8">
+        <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
+            Checkout reseller
+        </p>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-zinc-950 lg:text-4xl">
+            Selesaikan Pesanan
+        </h1>
+        <p class="mt-3 text-zinc-500">
+            Total {{ $totalQuantity }} unit. Minimal pembelian
+            {{ $minimumQuantity }} unit telah terpenuhi.
+        </p>
+    </div>
+
+    <form
+        action="{{ route('checkout.store') }}"
+        method="POST"
+        class="grid gap-8 lg:grid-cols-[1fr_390px]"
+    >
+        @csrf
+
+        <div class="card p-6 lg:p-8">
+            <h2 class="text-xl font-bold text-zinc-950">Informasi Reseller</h2>
+            <p class="mt-2 text-sm text-zinc-500">
+                Pastikan data di bawah benar untuk pencatatan invoice.
+            </p>
+
+            <div class="mt-7 grid gap-5 sm:grid-cols-2">
+                <div>
+                    <label for="customer_name" class="label">Nama lengkap</label>
+                    <input
+                        id="customer_name"
+                        name="customer_name"
+                        class="input"
+                        value="{{ old('customer_name', auth()->user()->name) }}"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="customer_store_name" class="label">Nama toko</label>
+                    <input
+                        id="customer_store_name"
+                        name="customer_store_name"
+                        class="input"
+                        value="{{ old('customer_store_name', auth()->user()->store_name) }}"
+                    >
+                </div>
+
+                <div>
+                    <label for="customer_email" class="label">Email</label>
+                    <input
+                        id="customer_email"
+                        type="email"
+                        name="customer_email"
+                        class="input"
+                        value="{{ old('customer_email', auth()->user()->email) }}"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="customer_phone" class="label">Nomor WhatsApp</label>
+                    <input
+                        id="customer_phone"
+                        name="customer_phone"
+                        class="input"
+                        value="{{ old('customer_phone', auth()->user()->phone) }}"
+                        required
+                    >
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label for="billing_address" class="label">Alamat</label>
+                    <textarea
+                        id="billing_address"
+                        name="billing_address"
+                        class="input min-h-32"
+                        required
+                    >{{ old('billing_address', auth()->user()->address) }}</textarea>
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label for="notes" class="label">Catatan pesanan</label>
+                    <textarea
+                        id="notes"
+                        name="notes"
+                        class="input min-h-28"
+                        placeholder="Catatan tambahan untuk Admin (opsional)"
+                    >{{ old('notes') }}</textarea>
+                </div>
             </div>
+        </div>
 
-            <form
-                action="{{ route('checkout.store') }}"
-                method="POST"
-                class="split-layout"
-            >
-                @csrf
+        <aside>
+            <div class="card sticky top-24 overflow-hidden">
+                <div class="border-b border-zinc-200 px-6 py-5">
+                    <h2 class="text-lg font-bold text-zinc-950">Ringkasan Pesanan</h2>
+                </div>
 
-                <section class="surface form-grid p-6 sm:p-8">
-                    <div class="field-full">
-                        <h2 class="panel-title">Data reseller</h2>
-                        <p class="text-muted mt-1">
-                            Data ini akan dicetak pada invoice transaksi.
-                        </p>
-                    </div>
+                <div class="max-h-80 divide-y divide-zinc-100 overflow-y-auto">
+                    @foreach ($items as $item)
+                        <div class="flex gap-4 p-5">
+                            <img
+                                src="{{ $item['product']->primary_image_url }}"
+                                alt="{{ $item['product']->name }}"
+                                class="h-16 w-16 rounded-xl bg-zinc-100 object-contain p-2"
+                            >
 
-                    <div class="field">
-                        <label class="label" for="customer-name">Nama lengkap</label>
-                        <input
-                            id="customer-name"
-                            class="input"
-                            name="customer_name"
-                            value="{{ old('customer_name', auth()->user()->name) }}"
-                            required
-                        >
-                    </div>
-
-                    <div class="field">
-                        <label class="label" for="customer-store-name">Nama toko</label>
-                        <input
-                            id="customer-store-name"
-                            class="input"
-                            name="customer_store_name"
-                            value="{{ old(
-                                'customer_store_name',
-                                auth()->user()->store_name
-                            ) }}"
-                        >
-                    </div>
-
-                    <div class="field">
-                        <label class="label" for="customer-email">Email</label>
-                        <input
-                            id="customer-email"
-                            class="input"
-                            type="email"
-                            name="customer_email"
-                            value="{{ old('customer_email', auth()->user()->email) }}"
-                            required
-                        >
-                    </div>
-
-                    <div class="field">
-                        <label class="label" for="customer-phone">Nomor WhatsApp</label>
-                        <input
-                            id="customer-phone"
-                            class="input"
-                            name="customer_phone"
-                            value="{{ old('customer_phone', auth()->user()->phone) }}"
-                            required
-                        >
-                    </div>
-
-                    <div class="field field-full">
-                        <label class="label" for="billing-address">Alamat</label>
-                        <textarea
-                            id="billing-address"
-                            class="input min-h-28"
-                            name="billing_address"
-                            required
-                        >{{ old('billing_address', auth()->user()->address) }}</textarea>
-                    </div>
-
-                    <div class="field field-full">
-                        <label class="label" for="notes">
-                            Catatan pesanan
-                            <span class="font-normal text-zinc-400">(opsional)</span>
-                        </label>
-                        <textarea
-                            id="notes"
-                            class="input min-h-24"
-                            name="notes"
-                        >{{ old('notes') }}</textarea>
-                    </div>
-                </section>
-
-                <aside class="surface h-fit panel-padding">
-                    <h2 class="panel-title">Rincian pesanan</h2>
-
-                    <div class="mt-5 space-y-4">
-                        @foreach($items as $item)
-                            <div class="flex justify-between gap-4 text-sm">
-                                <div>
-                                    <strong>{{ $item['product']->name }}</strong>
-                                    <p class="text-zinc-500">
-                                        {{ $item['product']->capacity }} ·
-                                        {{ $item['product']->color }} ×
-                                        {{ $item['quantity'] }}
-                                    </p>
-                                </div>
-                                <span>
-                                    {{ 'Rp'.number_format($item['subtotal'], 0, ',', '.') }}
-                                </span>
+                            <div class="min-w-0 flex-1">
+                                <p class="truncate font-semibold text-zinc-950">
+                                    {{ $item['product']->name }}
+                                </p>
+                                <p class="mt-1 text-xs text-zinc-500">
+                                    {{ $item['product']->capacity }} ·
+                                    {{ $item['product']->color }} ·
+                                    {{ $item['quantity'] }} unit
+                                </p>
+                                <p class="mt-2 text-sm font-semibold">
+                                    {{ \App\Support\Money::rupiah($item['subtotal']) }}
+                                </p>
                             </div>
-                        @endforeach
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="space-y-4 bg-zinc-50 p-6 text-sm">
+                    <div class="flex justify-between gap-4">
+                        <span class="text-zinc-500">Jumlah barang</span>
+                        <strong>{{ $totalQuantity }} unit</strong>
                     </div>
 
-                    <div class="mt-6 flex justify-between border-t border-zinc-200 pt-5">
-                        <span class="font-bold">Total</span>
-                        <strong class="text-xl">
-                            {{ 'Rp'.number_format($total, 0, ',', '.') }}
+                    <div class="flex justify-between gap-4 border-t border-zinc-200 pt-4">
+                        <span class="font-semibold text-zinc-900">Total pembayaran</span>
+                        <strong class="text-xl text-zinc-950">
+                            {{ \App\Support\Money::rupiah($total) }}
                         </strong>
                     </div>
 
-                    <div class="alert alert-info mt-5 text-xs">
-                        Stok akan dicadangkan ketika invoice dibuat. Setelah itu, lakukan
-                        pembayaran QRIS dan kirim konfirmasi.
-                    </div>
+                    <p class="rounded-xl bg-blue-50 p-3 text-xs leading-5 text-blue-700">
+                        Setelah invoice dibuat, lakukan pembayaran melalui QRIS dan kirim konfirmasi pembayaran.
+                    </p>
 
-                    <button class="btn-primary mt-5 w-full">Buat Invoice</button>
-                </aside>
-            </form>
-        </div>
-    </section>
+                    <button type="submit" class="btn-primary w-full">
+                        Buat Invoice
+                    </button>
+
+                    <a
+                        href="{{ route('cart.index') }}"
+                        class="block text-center font-semibold text-zinc-600"
+                    >
+                        Kembali ke keranjang
+                    </a>
+                </div>
+            </div>
+        </aside>
+    </form>
+</section>
 @endsection
