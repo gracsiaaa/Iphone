@@ -153,10 +153,10 @@
                     @foreach($latestArticles as $article)
                         <article class="article-card">
                             <a href="{{ route('articles.show', $article) }}">
-                                <img
-                                    src="{{ $article->thumbnail_url }}"
-                                    class="aspect-video w-full object-cover"
-                                    alt="{{ $article->title }}"
+                                <img 
+                                    src="{{ $article->thumbnail_url }}" 
+                                    alt="{{ $article->title }}" 
+                                    style="width: 100%; height: 200px; object-fit: cover; border-radius: 0.5rem 0.5rem 0 0;"
                                 >
                             </a>
 

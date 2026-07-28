@@ -4,11 +4,12 @@
     <a
         href="{{ route('products.show', $product) }}"
         class="product-image-wrap block"
+        style="position: relative; height: 18rem; width: 100%;"
     >
         <img
-            src="{{ $product->primary_image_url }}"
+            src="{{ $product->primary_image_url }}" 
             alt="{{ $product->name }}"
-            class="product-image"
+            style="width: 100%; height: 100%; object-fit: contain; background-color: white; padding: 1rem;"
         >
 
         <span
