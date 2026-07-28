@@ -29,7 +29,7 @@
             </a>
         </div>
     @else
-        <div class="grid gap-8 lg:grid-cols-[1fr_360px]">
+        <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_360px]">
             <div class="space-y-4">
                 @foreach ($items as $item)
                     @php
@@ -65,7 +65,7 @@
                                 <form
                                     action="{{ route('cart.update', $product) }}"
                                     method="POST"
-                                    class="flex items-center gap-2"
+                                    class="flex flex-col gap-2 min-[420px]:flex-row min-[420px]:items-center"
                                 >
                                     @csrf
                                     @method('PUT')
@@ -88,7 +88,7 @@
                                 <form
                                     action="{{ route('cart.destroy', $product) }}"
                                     method="POST"
-                                    class="mt-2 text-right"
+                                    class="mt-2 text-left min-[420px]:text-right"
                                     onsubmit="return confirm('Hapus produk ini dari keranjang?')"
                                 >
                                     @csrf
@@ -101,7 +101,7 @@
                             </div>
                         </div>
 
-                        <div class="mt-5 flex justify-between border-t border-zinc-100 pt-4 text-sm">
+                        <div class="mt-5 flex flex-wrap justify-between gap-3 border-t border-zinc-100 pt-4 text-sm">
                             <span class="text-zinc-500">
                                 Subtotal {{ $item['quantity'] }} unit
                             </span>
@@ -114,7 +114,7 @@
             </div>
 
             <aside>
-                <div class="card sticky top-24 p-6">
+                <div class="card p-5 sm:p-6 lg:sticky lg:top-24">
                     <h2 class="text-lg font-bold text-zinc-950">Ringkasan Belanja</h2>
 
                     <div class="mt-5 space-y-4 text-sm">

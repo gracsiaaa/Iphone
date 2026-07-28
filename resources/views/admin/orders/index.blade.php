@@ -5,7 +5,7 @@
 @section('eyebrow', 'Invoice management')
 
 @section('content')
-    <form method="GET" class="mb-6 flex max-w-sm gap-2">
+    <form method="GET" class="mb-6 flex max-w-sm flex-col gap-2 min-[420px]:flex-row">
         <select class="input" name="status">
             <option value="">Semua status</option>
             @foreach(\App\Enums\OrderStatus::cases() as $status)
@@ -17,7 +17,7 @@
                 </option>
             @endforeach
         </select>
-        <button class="btn-secondary !py-2.5">Filter</button>
+        <button class="btn-secondary w-full !py-2.5 min-[420px]:w-auto">Filter</button>
     </form>
 
     <div class="table-shell">

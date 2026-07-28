@@ -103,7 +103,7 @@
                 ];
             @endphp
 
-            <div class="mt-10 grid gap-5 md:grid-cols-4">
+            <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                 @foreach($steps as $step)
                     <div class="surface panel-padding">
                         <span class="text-sm font-black text-blue-600">{{ $step[0] }}</span>
@@ -149,18 +149,18 @@
                     <h2 class="section-title mt-2">Artikel terbaru</h2>
                 </div>
 
-                <div class="mt-8 grid gap-6 md:grid-cols-3">
+                <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach($latestArticles as $article)
                         <article class="article-card">
                             <a href="{{ route('articles.show', $article) }}">
                                 <img 
                                     src="{{ $article->thumbnail_url }}" 
-                                    alt="{{ $article->title }}" 
-                                    style="width: 100%; height: 200px; object-fit: cover; border-radius: 0.5rem 0.5rem 0 0;"
+                                    alt="{{ $article->title }}"
+                                    class="aspect-[16/10] w-full object-cover"
                                 >
                             </a>
 
-                            <div class="p-6">
+                            <div class="p-5 sm:p-6">
                                 <p class="meta-text">
                                     {{ optional($article->published_at)->format('d M Y') }}
                                 </p>

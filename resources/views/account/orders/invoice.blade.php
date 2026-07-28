@@ -17,17 +17,17 @@
 
     <main class="invoice-page">
         <header class="flex flex-col justify-between gap-8 border-b-2 border-zinc-950 pb-7 sm:flex-row">
-            <div class="flex items-center gap-4">
+            <div class="flex min-w-0 items-center gap-3 sm:gap-4">
                 <img
                     src="{{ asset('images/logo-mark.svg') }}"
                     class="h-14 w-14"
                     alt="Logo"
                 >
-                <div>
+                <div class="min-w-0">
                     <h1 class="text-xl font-bold">
                         {{ $siteSettings->get('site_name', 'iPhone Reseller') }}
                     </h1>
-                    <p class="text-muted mt-1 max-w-sm">
+                    <p class="text-muted mt-1 max-w-sm break-words">
                         {{ $siteSettings->get('store_address', 'Alamat toko Anda') }}<br>
                         {{ $siteSettings->get('store_phone', '') }}
                         @if($siteSettings->get('store_email', ''))
@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div class="sm:text-right">
+            <div class="min-w-0 break-words sm:text-right">
                 <p class="eyebrow">Dokumen transaksi</p>
                 <h2 class="mt-2 text-3xl font-bold">INVOICE</h2>
                 <p class="text-muted mt-2">

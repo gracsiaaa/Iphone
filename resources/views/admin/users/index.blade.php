@@ -5,8 +5,8 @@
 @section('eyebrow', 'Superadmin access control')
 
 @section('content')
-    <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
-        <form method="GET" class="grid gap-3 sm:grid-cols-[260px_180px_auto]">
+    <div class="responsive-actions mb-6 items-end justify-between">
+        <form method="GET" class="grid w-full gap-3 sm:grid-cols-2 lg:w-auto lg:grid-cols-[260px_180px_auto]">
             <div class="field">
                 <label class="label" for="search">Cari pengguna</label>
                 <input
@@ -33,7 +33,7 @@
                 </select>
             </div>
 
-            <button class="btn-secondary self-end">Filter</button>
+            <button class="btn-secondary self-end sm:col-span-2 lg:col-span-1">Filter</button>
         </form>
 
         <a href="{{ route('admin.users.create') }}" class="btn-primary">

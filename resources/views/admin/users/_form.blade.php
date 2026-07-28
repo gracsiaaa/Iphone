@@ -1,4 +1,4 @@
-<div class="surface mx-auto max-w-4xl p-7">
+<div class="surface mx-auto max-w-4xl p-5 sm:p-7">
     <div class="form-grid">
         <div class="field">
             <label class="label" for="name">Nama</label>

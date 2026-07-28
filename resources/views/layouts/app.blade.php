@@ -123,9 +123,11 @@
 
                 <button
                     type="button"
-                    data-toggle="mobile-menu"
+                    data-mobile-menu-toggle
                     class="mobile-toggle"
                     aria-label="Buka menu"
+                    aria-controls="mobile-menu"
+                    aria-expanded="false"
                 >
                     <svg
                         class="h-5 w-5"
@@ -158,6 +160,10 @@
                     <a href="{{ route('cart.index') }}" class="mobile-link">
                         Keranjang ({{ array_sum(session('cart', [])) }})
                     </a>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button class="mobile-link w-full text-left">Keluar</button>
+                    </form>
                 @else
                     <a href="{{ route('login') }}" class="mobile-link">Login</a>
                     <a href="{{ route('register') }}" class="mobile-link !bg-zinc-950 !text-white">
@@ -199,8 +205,8 @@
     </main>
 
     <footer class="mt-12 border-t border-zinc-200 bg-white/70">
-        <div class="site-shell grid gap-10 py-12 md:grid-cols-4">
-            <div class="self-center md:col-span-2">
+        <div class="site-shell grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10 lg:py-12">
+            <div class="self-center sm:col-span-2 lg:col-span-2">
                 <div class="brand-link">
                     <img
                         src="{{ asset('images/logo-mark.svg') }}"
@@ -232,8 +238,8 @@
                 <h3 class="panel-title">Kontak</h3>
                 <div class="mt-4 grid gap-3 text-sm text-zinc-500">
                     <span>{{ $siteSettings->get('store_phone', '081231231234') }}</span>
-                    <span>{{ $siteSettings->get('store_email', 'hello@example.com') }}</span>
-                    <span>{{ $siteSettings->get('store_address', 'Gerbang Griya Madiun') }}</span>
+                    <span class="break-words">{{ $siteSettings->get('store_email', 'hello@example.com') }}</span>
+                    <span class="break-words">{{ $siteSettings->get('store_address', 'Gerbang Griya Madiun') }}</span>
                 </div>
             </div>
         </div>

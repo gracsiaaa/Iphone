@@ -94,12 +94,12 @@
                     <section class="surface panel-padding">
                         <h2 class="panel-title">Ringkasan pembayaran</h2>
 
-                        <div class="mt-5 flex justify-between text-sm">
+                        <div class="mt-5 flex flex-wrap justify-between gap-3 text-sm">
                             <span class="text-zinc-500">Subtotal</span>
                             <span>{{ $order->formatted_total }}</span>
                         </div>
 
-                        <div class="mt-5 flex justify-between border-t border-zinc-200 pt-5">
+                        <div class="mt-5 flex flex-wrap justify-between gap-3 border-t border-zinc-200 pt-5">
                             <strong>Total</strong>
                             <strong class="text-xl">{{ $order->formatted_total }}</strong>
                         </div>

@@ -5,7 +5,7 @@
 @section('eyebrow', 'Superadmin')
 
 @section('content')
-    <div class="mb-6 flex justify-end">
+    <div class="responsive-actions mb-6 justify-end">
         <a href="{{ route('admin.faqs.create') }}" class="btn-primary">
             + Tambah FAQ
         </a>

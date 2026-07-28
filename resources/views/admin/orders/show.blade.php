@@ -25,7 +25,7 @@
 
                 <div class="divide-y divide-zinc-100">
                     @foreach($order->items as $item)
-                        <div class="flex justify-between gap-5 p-5 sm:p-6">
+                        <div class="flex flex-col justify-between gap-3 p-5 min-[480px]:flex-row sm:p-6">
                             <div>
                                 <strong>{{ $item->product_name }}</strong>
                                 <p class="text-muted mt-1">
@@ -41,7 +41,7 @@
                     @endforeach
                 </div>
 
-                <div class="flex justify-between border-t border-zinc-200 bg-zinc-50 p-6">
+                <div class="flex flex-wrap justify-between gap-3 border-t border-zinc-200 bg-zinc-50 p-5 sm:p-6">
                     <strong>Total</strong>
                     <strong class="text-xl">{{ $order->formatted_total }}</strong>
                 </div>
