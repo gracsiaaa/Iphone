@@ -13,12 +13,11 @@
                         <p class="eyebrow-light">Partner stok reseller profesional</p>
 
                         <h1 class="display-title mt-5 max-w-3xl">
-                            Stok iPhone yang siap membantu bisnis reseller Anda tumbuh.
+                            Your favorite Iphone Store
                         </h1>
 
                         <p class="mt-6 max-w-xl text-base leading-7 text-zinc-300 sm:text-lg">
-                            Temukan tipe, kapasitas, warna, dan harga secara transparan.
-                            Checkout cepat, pembayaran QRIS, serta invoice yang tercatat rapi.
+                            Temukan tipe, kapasitas, warna, dan harga yang menarik
                         </p>
 
                         <div class="mt-8 flex flex-wrap gap-3">
@@ -31,18 +30,18 @@
                                     href="{{ route('register') }}"
                                     class="btn-secondary !border-white/20 !bg-white/5 !text-white hover:!bg-white/10"
                                 >
-                                    Daftar Reseller
+                                    Daftar
                                 </a>
                             @endguest
                         </div>
 
                         <div class="hero-stats">
                             <div class="hero-stat">
-                                <strong class="text-xl">10+</strong>
-                                <p class="mt-1 text-xs text-zinc-400">Pilihan stok</p>
+                                <strong class="text-xl">100+</strong>
+                                <p class="mt-1 text-xs text-zinc-400">Pilihan</p>
                             </div>
                             <div class="hero-stat">
-                                <strong class="text-xl">QRIS</strong>
+                                <strong class="text-xl">Payment</strong>
                                 <p class="mt-1 text-xs text-zinc-400">Pembayaran mudah</p>
                             </div>
                             <div class="hero-stat">
@@ -92,11 +91,7 @@
     <section class="section-rule page-section">
         <div class="site-shell">
             <div class="mx-auto max-w-2xl text-center">
-                <p class="eyebrow">Alur pembelian</p>
-                <h2 class="section-title mt-2">Sederhana dari stok sampai invoice</h2>
-                <p class="body-copy mt-4">
-                    Empat langkah yang jelas agar proses pemesanan mudah dipahami.
-                </p>
+                <h2 class="section-title mt-2">Alur Pembelian</h2>
             </div>
 
             @php
@@ -192,10 +187,6 @@
                 <h2 class="mt-3 text-3xl font-bold tracking-tight">
                     Siap menemukan stok untuk toko Anda?
                 </h2>
-                <p class="mx-auto mt-4 max-w-2xl text-blue-100">
-                    Buat akun reseller, simpan riwayat pembelian, dan kelola seluruh invoice
-                    dalam satu tempat.
-                </p>
                 <a
                     href="{{ auth()->check() ? route('products.index') : route('register') }}"
                     class="btn-secondary mt-7 !border-white !bg-white !text-blue-700"
