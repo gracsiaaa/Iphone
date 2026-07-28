@@ -15,10 +15,10 @@
 
             <div class="grid gap-10 lg:grid-cols-2 lg:gap-14">
                 <div class="surface overflow-hidden bg-zinc-100">
-                    <img
-                        src="{{ $product->primary_image_url }}"
-                        class="aspect-square w-full object-cover"
-                        alt="{{ $product->name }}"
+                    <img 
+                        src="{{ $product->primary_image_url }}" 
+                        alt="{{ $product->name }}" 
+                        style="width: 100%; height: 450px; object-fit: contain; background-color: white; border-radius: 0.5rem; padding: 2rem;"
                     >
                 </div>
 

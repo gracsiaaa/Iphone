@@ -31,6 +31,6 @@ class Article extends Model
 
     public function getThumbnailUrlAttribute(): string
     {
-        return $this->thumbnail ? Storage::url($this->thumbnail) : asset('images/articles/article-placeholder.svg');
+        return $this->thumbnail ? asset('storage/' . $this->thumbnail) : asset('images/articles/article-placeholder.svg');
     }
 }

@@ -38,7 +38,7 @@ class Product extends Model
     public function getPrimaryImageUrlAttribute(): string
     {
         $path = $this->images->firstWhere('is_primary', true)?->path ?? $this->images->first()?->path;
-        return $path ? Storage::url($path) : asset('images/products/iphone-placeholder.svg');
+        return $path ? asset('storage/' . $path) : asset('images/products/iphone-placeholder.svg');
     }
 
     public function getFormattedPriceAttribute(): string
