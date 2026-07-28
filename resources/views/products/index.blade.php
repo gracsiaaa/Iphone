@@ -5,11 +5,8 @@
 @section('content')
     <section class="section-rule">
         <div class="site-shell py-12 sm:py-14">
-            <p class="eyebrow">Katalog stok</p>
-            <h1 class="page-title mt-3">Produk iPhone untuk reseller</h1>
-            <p class="body-copy mt-4 max-w-2xl">
-                Cari stok berdasarkan kapasitas, warna, harga, dan ketersediaan terkini.
-            </p>
+            <p class="eyebrow">Katalog</p>
+            <h1 class="page-title mt-3">Available Products</h1>
         </div>
     </section>
 

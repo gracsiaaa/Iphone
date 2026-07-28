@@ -200,7 +200,7 @@
 
     <footer class="mt-12 border-t border-zinc-200 bg-white/70">
         <div class="site-shell grid gap-10 py-12 md:grid-cols-4">
-            <div class="md:col-span-2">
+            <div class="self-center md:col-span-2">
                 <div class="brand-link">
                     <img
                         src="{{ asset('images/logo-mark.svg') }}"
@@ -212,10 +212,9 @@
                     </strong>
                 </div>
 
-                <p class="mt-4 max-w-md text-muted">
+                <p class="mt-4 max-w-md text-muted" align="justify">
                     {{ $siteSettings->get(
-                        'site_tagline',
-                        'Stok iPhone terpercaya untuk mendukung pertumbuhan bisnis reseller Anda.'
+                        'site_tagline'
                     ) }}
                 </p>
             </div>
@@ -232,9 +231,9 @@
             <div>
                 <h3 class="panel-title">Kontak</h3>
                 <div class="mt-4 grid gap-3 text-sm text-zinc-500">
-                    <span>{{ $siteSettings->get('store_phone', '08xx-xxxx-xxxx') }}</span>
+                    <span>{{ $siteSettings->get('store_phone', '081231231234') }}</span>
                     <span>{{ $siteSettings->get('store_email', 'hello@example.com') }}</span>
-                    <span>{{ $siteSettings->get('store_address', 'Alamat toko Anda') }}</span>
+                    <span>{{ $siteSettings->get('store_address', 'Gerbang Griya Madiun') }}</span>
                 </div>
             </div>
         </div>

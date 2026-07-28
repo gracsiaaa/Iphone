@@ -6,10 +6,7 @@
     <section class="section-rule">
         <div class="site-shell py-12 text-center sm:py-14">
             <p class="eyebrow">Bantuan</p>
-            <h1 class="page-title mt-3">Pertanyaan yang sering diajukan</h1>
-            <p class="body-copy mx-auto mt-4 max-w-2xl">
-                Informasi pembelian, pembayaran QRIS, stok, dan invoice.
-            </p>
+            <h1 class="page-title mt-3">Frequently Asked Questions</h1>
         </div>
     </section>
 

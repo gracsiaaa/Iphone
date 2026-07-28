@@ -10,10 +10,9 @@
                     <p class="eyebrow">Hubungi toko</p>
                     <h1 class="page-title mt-3">Butuh informasi stok atau transaksi?</h1>
                     <p class="body-copy mt-5 max-w-lg">
-                        Kirimkan pertanyaan melalui formulir. Pesan akan masuk langsung ke
-                        dashboard Superadmin.
+                        Kirimkan pertanyaan melalui formulir.
                     </p>
-
+                    
                     <div class="mt-9 grid gap-4">
                         <div class="surface panel-padding">
                             <p class="meta-text">WhatsApp</p>

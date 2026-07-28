@@ -6,7 +6,6 @@
     <section class="hero-section">
         <div class="site-shell">
             <div class="surface-dark px-6 py-12 sm:px-10 sm:py-14">
-                <p class="eyebrow-light">Insight & panduan</p>
                 <h1 class="page-title mt-3 text-white">Article</h1>
                 <p class="mt-4 max-w-2xl text-zinc-400">
                     Informasi produk, tips reseller, dan panduan transaksi dari toko kami.

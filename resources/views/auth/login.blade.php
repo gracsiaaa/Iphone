@@ -14,9 +14,6 @@
                     >
 
                     <h1 class="mt-5 text-2xl font-bold">Masuk ke akun</h1>
-                    <p class="text-muted mt-2">
-                        Gunakan username atau email yang sudah terdaftar.
-                    </p>
                 </div>
 
                 <!-- Error -->
