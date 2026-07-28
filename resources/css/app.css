@@ -20,7 +20,7 @@
     }
 
     body {
-        @apply min-h-screen bg-stone-100 text-zinc-950 antialiased;
+        @apply min-h-screen overflow-x-clip bg-stone-100 text-zinc-950 antialiased;
         background-image:
             radial-gradient(circle at 8% 0%, rgb(37 99 235 / 0.06), transparent 26rem),
             radial-gradient(circle at 92% 10%, rgb(24 24 27 / 0.05), transparent 24rem);
@@ -50,7 +50,8 @@
 
 @layer components {
     /* Layout */
-    .site-shell {
+    .site-shell,
+    .container-site {
         @apply mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8;
     }
 
@@ -59,7 +60,7 @@
     }
 
     .page-section {
-        @apply py-12 sm:py-16;
+        @apply py-10 sm:py-14 lg:py-16;
     }
 
     .section-rule {
@@ -80,35 +81,35 @@
 
     /* Header and navigation */
     .site-header {
-        @apply sticky top-0 z-40 py-3;
+        @apply sticky top-0 z-40 py-2 sm:py-3;
     }
 
     .site-header-bar {
-        @apply flex min-h-16 items-center justify-between rounded-2xl border border-white/80 bg-white/90 px-4 shadow-sm backdrop-blur-xl sm:px-5;
+        @apply flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-white/80 bg-white/90 px-3 shadow-sm backdrop-blur-xl sm:min-h-16 sm:px-5;
     }
 
     .brand-link {
-        @apply flex min-w-0 items-center gap-3;
+        @apply flex min-w-0 items-center gap-2.5 sm:gap-3;
     }
 
     .brand-logo {
-        @apply h-10 w-10 shrink-0 rounded-xl;
+        @apply h-9 w-9 shrink-0 rounded-xl sm:h-10 sm:w-10;
     }
 
     .brand-name {
-        @apply truncate text-sm font-bold tracking-tight text-zinc-950 sm:text-base;
+        @apply max-w-40 truncate text-sm font-bold tracking-tight text-zinc-950 sm:max-w-none sm:text-base;
     }
 
     .brand-caption {
-        @apply truncate text-[11px] font-medium text-zinc-500;
+        @apply hidden truncate text-[11px] font-medium text-zinc-500;
     }
 
     .site-nav {
-        @apply hidden items-center gap-1 rounded-full bg-zinc-100 p-1 md:flex;
+        @apply hidden items-center gap-1 rounded-full bg-zinc-100 p-1 lg:flex;
     }
 
     .nav-link {
-        @apply rounded-full px-4 py-2 text-sm font-semibold text-zinc-500 hover:bg-white hover:text-zinc-950;
+        @apply rounded-full px-3 py-2 text-sm font-semibold text-zinc-500 hover:bg-white hover:text-zinc-950 xl:px-4;
     }
 
     .nav-link-active {
@@ -116,15 +117,15 @@
     }
 
     .header-actions {
-        @apply hidden items-center gap-3 md:flex;
+        @apply hidden items-center gap-2 lg:flex xl:gap-3;
     }
 
     .mobile-toggle {
-        @apply rounded-xl border border-zinc-200 bg-white p-2.5 text-zinc-700 hover:bg-zinc-100 md:hidden;
+        @apply shrink-0 rounded-xl border border-zinc-200 bg-white p-2.5 text-zinc-700 hover:bg-zinc-100 lg:hidden;
     }
 
     .mobile-menu {
-        @apply mt-2 rounded-2xl border border-zinc-200 bg-white p-3 shadow-lg md:hidden;
+        @apply mt-2 max-h-[calc(100vh-6rem)] overflow-y-auto overscroll-contain rounded-2xl border border-zinc-200 bg-white p-3 shadow-lg lg:hidden;
     }
 
     .mobile-link {
@@ -141,15 +142,15 @@
     }
 
     .display-title {
-        @apply text-4xl font-bold leading-[1.06] tracking-[-0.04em] sm:text-5xl lg:text-6xl;
+        @apply text-3xl font-bold leading-[1.08] tracking-[-0.04em] sm:text-5xl lg:text-6xl;
     }
 
     .page-title {
-        @apply text-3xl font-bold leading-tight tracking-[-0.03em] sm:text-4xl;
+        @apply text-2xl font-bold leading-tight tracking-[-0.03em] sm:text-3xl lg:text-4xl;
     }
 
     .section-title {
-        @apply text-2xl font-bold leading-tight tracking-[-0.025em] sm:text-3xl;
+        @apply text-xl font-bold leading-tight tracking-[-0.025em] sm:text-2xl lg:text-3xl;
     }
 
     .panel-title {
@@ -186,15 +187,15 @@
     }
 
     .panel-padding {
-        @apply p-5 sm:p-6;
+        @apply p-4 sm:p-6;
     }
 
     .panel-header {
-        @apply flex flex-wrap items-center justify-between gap-4 border-b border-zinc-200 px-5 py-4 sm:px-6;
+        @apply flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 px-4 py-4 sm:px-6;
     }
 
     .empty-state {
-        @apply rounded-2xl border border-dashed border-zinc-300 bg-white px-6 py-14 text-center;
+        @apply rounded-2xl border border-dashed border-zinc-300 bg-white px-4 py-10 text-center sm:px-6 sm:py-14;
     }
 
     .info-grid {
@@ -276,7 +277,11 @@
     }
 
     .form-actions {
-        @apply flex flex-wrap items-center gap-3 border-t border-zinc-200 pt-5;
+        @apply flex flex-col items-stretch gap-3 border-t border-zinc-200 pt-5 sm:flex-row sm:flex-wrap sm:items-center;
+    }
+
+    .form-actions > * {
+        @apply w-full sm:w-auto;
     }
 
     /* Tables */
@@ -284,12 +289,22 @@
         @apply overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm;
     }
 
+    .table-shell::before {
+        content: 'Geser tabel ke samping untuk melihat kolom lain';
+        @apply block border-b border-zinc-100 bg-zinc-50 px-4 py-2 text-xs text-zinc-500 sm:hidden;
+    }
+
     .table-scroll {
-        @apply overflow-x-auto;
+        @apply overflow-x-auto overscroll-x-contain;
+        -webkit-overflow-scrolling: touch;
     }
 
     .data-table {
-        @apply min-w-full text-sm;
+        @apply min-w-[680px] text-sm;
+    }
+
+    .data-table-compact {
+        @apply min-w-[600px];
     }
 
     .data-table thead {
@@ -297,7 +312,7 @@
     }
 
     .data-table th {
-        @apply whitespace-nowrap px-5 py-4;
+        @apply whitespace-nowrap px-4 py-3.5 sm:px-5 sm:py-4;
     }
 
     .data-table tbody {
@@ -305,7 +320,7 @@
     }
 
     .data-table td {
-        @apply px-5 py-4 align-middle;
+        @apply px-4 py-3.5 align-middle sm:px-5 sm:py-4;
     }
 
     .data-table tbody tr {
@@ -371,11 +386,11 @@
     }
 
     .hero-panel {
-        @apply relative overflow-hidden rounded-[2rem] bg-zinc-950 px-6 py-12 text-white shadow-2xl sm:px-10 lg:px-14 lg:py-16;
+        @apply relative overflow-hidden rounded-3xl bg-zinc-950 px-5 py-9 text-white shadow-2xl sm:px-8 sm:py-12 lg:rounded-[2rem] lg:px-14 lg:py-16;
     }
 
     .hero-grid {
-        @apply relative z-10 grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr];
+        @apply relative z-10 grid items-center gap-8 sm:gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12;
     }
 
     .hero-glow {
@@ -383,15 +398,20 @@
     }
 
     .hero-stats {
-        @apply mt-10 grid max-w-xl grid-cols-3 gap-3 border-t border-white/10 pt-6;
+        @apply mt-8 grid max-w-xl grid-cols-3 gap-2 border-t border-white/10 pt-5 sm:mt-10 sm:gap-3 sm:pt-6;
     }
 
     .hero-stat {
-        @apply rounded-xl bg-white/5 p-3;
+        @apply min-w-0 rounded-xl bg-white/5 p-2.5 sm:p-3;
+    }
+
+    .hero-stat strong,
+    .hero-stat p {
+        @apply break-words;
     }
 
     .hero-art {
-        @apply relative mx-auto w-full max-w-md;
+        @apply relative mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-md;
     }
 
     .hero-image-frame {
@@ -399,11 +419,11 @@
     }
 
     .section-heading {
-        @apply flex flex-wrap items-end justify-between gap-4;
+        @apply flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-4;
     }
 
     .product-grid {
-        @apply grid gap-5 sm:grid-cols-2 lg:grid-cols-4;
+        @apply grid gap-5 lg:grid-cols-4;
     }
 
     .product-card {
@@ -451,7 +471,7 @@
     }
 
     .cta-panel {
-        @apply overflow-hidden rounded-[2rem] bg-blue-600 px-6 py-12 text-center text-white shadow-xl sm:px-12;
+        @apply overflow-hidden rounded-3xl bg-blue-600 px-5 py-10 text-center text-white shadow-xl sm:px-12 sm:py-12 lg:rounded-[2rem];
     }
 
     /* Account */
@@ -481,7 +501,25 @@
     }
 
     .admin-sidebar {
-        @apply hidden w-full shrink-0 bg-zinc-950 p-5 lg:sticky lg:top-0 lg:block lg:h-screen lg:w-72 lg:overflow-y-auto;
+        @apply fixed inset-y-0 left-0 z-50 block h-dvh shrink-0 overflow-y-auto bg-zinc-950 p-5 shadow-2xl transition-transform duration-300 lg:sticky lg:top-0 lg:h-screen lg:w-72 lg:translate-x-0 lg:shadow-none;
+        width: min(18rem, calc(100vw - 3rem));
+        transform: translateX(-105%);
+    }
+
+    .admin-sidebar.is-open {
+        transform: translateX(0);
+    }
+
+    .admin-sidebar-overlay {
+        @apply fixed inset-0 z-40 hidden bg-zinc-950/55 backdrop-blur-sm lg:hidden;
+    }
+
+    .admin-sidebar-overlay.is-open {
+        @apply block;
+    }
+
+    .admin-sidebar-close {
+        @apply ml-auto inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 text-xl text-zinc-300 hover:bg-white/10 hover:text-white lg:hidden;
     }
 
     .admin-brand {
@@ -505,23 +543,23 @@
     }
 
     .admin-header {
-        @apply sticky top-0 z-30 flex items-center justify-between border-b border-zinc-200 bg-white/90 px-4 py-4 backdrop-blur-xl sm:px-8;
+        @apply sticky top-0 z-30 flex min-w-0 items-center justify-between gap-3 border-b border-zinc-200 bg-white/90 px-3 py-3 backdrop-blur-xl sm:px-6 sm:py-4 xl:px-8;
     }
 
     .admin-main {
-        @apply mx-auto w-full max-w-[1440px] p-4 sm:p-8;
+        @apply mx-auto w-full max-w-[1440px] p-3 sm:p-6 xl:p-8;
     }
 
     .admin-mobile-button {
-        @apply mr-3 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm font-bold lg:hidden;
+        @apply mr-2 shrink-0 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm font-bold lg:hidden;
     }
 
     .stat-grid {
-        @apply grid gap-5 sm:grid-cols-2 xl:grid-cols-4;
+        @apply grid gap-4 xl:grid-cols-4 xl:gap-5;
     }
 
     .stat-card {
-        @apply rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm;
+        @apply rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm sm:p-6;
     }
 
     .stat-value {
@@ -530,11 +568,94 @@
 
     /* Invoice */
     .invoice-body {
-        @apply bg-zinc-100 p-4 text-zinc-950 sm:p-8;
+        @apply bg-zinc-100 p-2 text-zinc-950 sm:p-8;
     }
 
     .invoice-page {
-        @apply mx-auto max-w-4xl rounded-2xl bg-white p-6 shadow-xl sm:p-10;
+        @apply mx-auto max-w-4xl rounded-2xl bg-white p-4 shadow-xl sm:p-8 lg:p-10;
+    }
+
+    .responsive-actions {
+        @apply flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center;
+    }
+
+    .responsive-actions > * {
+        @apply w-full sm:w-auto;
+    }
+
+}
+
+@media (min-width: 380px) {
+    .brand-caption {
+        display: block;
+    }
+}
+
+@media (min-width: 420px) and (max-width: 639px) {
+    .display-title {
+        font-size: 2.25rem;
+        line-height: 1.08;
+    }
+}
+
+@media (min-width: 480px) {
+    .product-grid,
+    .stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 639px) {
+    .btn-primary,
+    .btn-secondary,
+    .btn-accent,
+    .btn-danger,
+    .btn-ghost {
+        min-height: 44px;
+    }
+
+    .surface,
+    .surface-soft,
+    .card,
+    .table-shell {
+        border-radius: 1rem;
+    }
+
+    .hero-stat strong {
+        font-size: 0.75rem;
+        line-height: 1rem;
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+    }
+
+    .hero-stat p {
+        font-size: 0.65rem;
+        line-height: 1rem;
+    }
+
+    .admin-header h1 {
+        font-size: 1rem;
+        line-height: 1.35rem;
+    }
+
+    .admin-header p {
+        max-width: 12rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .admin-sidebar {
+        transform: none;
+    }
+}
+
+@media (min-width: 1280px) {
+    .stat-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 }
 
@@ -550,7 +671,8 @@
         box-shadow: none;
     }
 
-    .print-hidden {
+    .print-hidden,
+    .table-shell::before {
         display: none !important;
     }
 }

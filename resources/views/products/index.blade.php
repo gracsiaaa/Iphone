@@ -13,8 +13,8 @@
     <section class="page-section">
         <div class="site-shell">
             <form method="GET" class="surface panel-padding">
-                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-                    <div class="field lg:col-span-2">
+                <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+                    <div class="field sm:col-span-2 xl:col-span-2">
                         <label class="label" for="search">Cari produk</label>
                         <input
                             id="search"
@@ -52,7 +52,7 @@
 
                     <div class="field">
                         <label class="label" for="sort">Urutkan</label>
-                        <div class="flex gap-2">
+                        <div class="flex flex-col gap-2 min-[420px]:flex-row">
                             <select id="sort" class="input" name="sort">
                                 <option value="">Terbaru</option>
                                 <option
@@ -68,7 +68,7 @@
                                     Harga tertinggi
                                 </option>
                             </select>
-                            <button class="btn-primary !px-4">Cari</button>
+                            <button class="btn-primary w-full !px-4 min-[420px]:w-auto">Cari</button>
                         </div>
                     </div>
                 </div>

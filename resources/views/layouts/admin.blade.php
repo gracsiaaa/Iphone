@@ -11,7 +11,29 @@
 </head>
 <body class="admin-body">
     <div class="admin-shell">
-        <aside id="admin-sidebar" class="admin-sidebar">
+        <button
+            id="admin-sidebar-overlay"
+            type="button"
+            class="admin-sidebar-overlay"
+            aria-label="Tutup menu admin"
+            data-admin-sidebar-close
+        ></button>
+
+        <aside id="admin-sidebar" class="admin-sidebar" aria-label="Navigasi admin">
+            <div class="mb-4 flex items-center gap-3 lg:hidden">
+                <span class="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">
+                    Menu Admin
+                </span>
+                <button
+                    type="button"
+                    class="admin-sidebar-close"
+                    aria-label="Tutup menu admin"
+                    data-admin-sidebar-close
+                >
+                    ×
+                </button>
+            </div>
+
             <a href="{{ route('admin.dashboard') }}" class="admin-brand">
                 <img
                     src="{{ asset('images/logo-mark.svg') }}"
@@ -130,8 +152,10 @@
                 <div class="flex min-w-0 items-center">
                     <button
                         type="button"
-                        data-toggle="admin-sidebar"
                         class="admin-mobile-button"
+                        aria-controls="admin-sidebar"
+                        aria-expanded="false"
+                        data-admin-sidebar-toggle
                     >
                         Menu
                     </button>
@@ -145,7 +169,7 @@
                     </div>
                 </div>
 
-                <div class="hidden text-right sm:block">
+                <div class="hidden min-w-0 text-right md:block">
                     <div class="text-sm font-semibold">{{ auth()->user()->name }}</div>
                     <div class="text-xs text-zinc-500">{{ auth()->user()->email }}</div>
                 </div>

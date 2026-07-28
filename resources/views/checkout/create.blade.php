@@ -20,11 +20,11 @@
     <form
         action="{{ route('checkout.store') }}"
         method="POST"
-        class="grid gap-8 lg:grid-cols-[1fr_390px]"
+        class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,1fr)_390px]"
     >
         @csrf
 
-        <div class="card p-6 lg:p-8">
+        <div class="card p-5 sm:p-6 lg:p-8">
             <h2 class="text-xl font-bold text-zinc-950">Informasi Reseller</h2>
             <p class="mt-2 text-sm text-zinc-500">
                 Pastikan data di bawah benar untuk pencatatan invoice.
@@ -98,7 +98,7 @@
         </div>
 
         <aside>
-            <div class="card sticky top-24 overflow-hidden">
+            <div class="card overflow-hidden lg:sticky lg:top-24">
                 <div class="border-b border-zinc-200 px-6 py-5">
                     <h2 class="text-lg font-bold text-zinc-950">Ringkasan Pesanan</h2>
                 </div>
@@ -109,7 +109,7 @@
                             <img
                                 src="{{ $item['product']->primary_image_url }}"
                                 alt="{{ $item['product']->name }}"
-                                class="h-16 w-16 rounded-xl bg-zinc-100 object-contain p-2"
+                                class="h-16 w-16 shrink-0 rounded-xl bg-zinc-100 object-contain p-2"
                             >
 
                             <div class="min-w-0 flex-1">

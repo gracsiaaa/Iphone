@@ -18,7 +18,7 @@
                     <img 
                         src="{{ $product->primary_image_url }}" 
                         alt="{{ $product->name }}" 
-                        style="width: 100%; height: 450px; object-fit: contain; background-color: white; border-radius: 0.5rem; padding: 2rem;"
+                        class="aspect-square w-full bg-white object-contain p-5 sm:p-8 lg:min-h-[450px]"
                     >
                 </div>
 
@@ -56,11 +56,11 @@
                         <form
                             action="{{ route('cart.store', $product) }}"
                             method="POST"
-                            class="mt-8 flex max-w-md gap-3"
+                            class="mt-8 flex max-w-md flex-col gap-3 min-[420px]:flex-row"
                         >
                             @csrf
                             <input
-                                class="input w-28"
+                                class="input w-full min-[420px]:w-28"
                                 type="number"
                                 name="quantity"
                                 min="1"

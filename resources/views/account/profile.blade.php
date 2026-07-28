@@ -17,7 +17,7 @@
                 <form
                     action="{{ route('profile.update') }}"
                     method="POST"
-                    class="surface form-grid p-7 sm:p-9"
+                    class="surface form-grid p-5 sm:p-9"
                 >
                     @csrf
                     @method('PUT')

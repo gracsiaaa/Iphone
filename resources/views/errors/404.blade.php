@@ -4,7 +4,7 @@
 
 @section('content')
     <section class="page-section">
-        <div class="site-shell flex min-h-[520px] items-center justify-center">
+        <div class="site-shell flex min-h-[360px] sm:min-h-[520px] items-center justify-center">
             <div class="empty-state max-w-lg">
                 <p class="eyebrow">404</p>
                 <h1 class="page-title mt-3">Halaman tidak ditemukan</h1>

@@ -14,7 +14,7 @@
         @csrf
         @method('PUT')
 
-        <section class="surface form-grid p-7 sm:p-8">
+        <section class="surface form-grid p-5 sm:p-8">
             <div class="field-full">
                 <h2 class="panel-title">Identitas website</h2>
                 <p class="text-muted mt-1">

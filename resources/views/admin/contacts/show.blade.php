@@ -5,7 +5,7 @@
 @section('eyebrow', 'Pesan dari '.$message->name)
 
 @section('content')
-    <section class="surface max-w-4xl p-7 sm:p-8">
+    <section class="surface max-w-4xl p-5 sm:p-8">
         <div class="grid gap-5 border-b border-zinc-200 pb-6 text-sm sm:grid-cols-3">
             <div>
                 <span class="info-label">Nama</span>

@@ -3,13 +3,12 @@
 <article class="product-card">
     <a
         href="{{ route('products.show', $product) }}"
-        class="product-image-wrap block"
-        style="position: relative; height: 18rem; width: 100%;"
+        class="product-image-wrap block aspect-square w-full"
     >
         <img
             src="{{ $product->primary_image_url }}" 
             alt="{{ $product->name }}"
-            style="width: 100%; height: 100%; object-fit: contain; background-color: white; padding: 1rem;"
+            class="h-full w-full bg-white object-contain p-4 sm:p-5"
         >
 
         <span

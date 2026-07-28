@@ -53,7 +53,7 @@
             </div>
 
             <div class="table-scroll">
-                <table class="data-table">
+                <table class="data-table data-table-compact">
                     <thead>
                         <tr>
                             <th>Invoice</th>

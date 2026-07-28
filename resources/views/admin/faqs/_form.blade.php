@@ -1,4 +1,4 @@
-<div class="surface mx-auto max-w-3xl space-y-5 p-7 sm:p-8">
+<div class="surface mx-auto max-w-3xl space-y-5 p-5 sm:p-8">
     <div class="field">
         <label class="label" for="question">Pertanyaan</label>
         <input

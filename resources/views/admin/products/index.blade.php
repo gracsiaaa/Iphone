@@ -5,15 +5,15 @@
 @section('eyebrow', 'Katalog')
 
 @section('content')
-    <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <form method="GET" class="flex w-full max-w-lg gap-2">
+    <div class="responsive-actions mb-6 justify-between">
+        <form method="GET" class="flex w-full max-w-lg flex-col gap-2 min-[420px]:flex-row">
             <input
                 class="input"
                 name="search"
                 value="{{ request('search') }}"
                 placeholder="Cari produk..."
             >
-            <button class="btn-secondary !py-2.5">Cari</button>
+            <button class="btn-secondary w-full !py-2.5 min-[420px]:w-auto">Cari</button>
         </form>
 
         <a href="{{ route('admin.products.create') }}" class="btn-primary">

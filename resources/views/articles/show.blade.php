@@ -11,7 +11,7 @@
                     ← Kembali ke Article
                 </a>
 
-                <h1 class="mt-6 max-w-4xl text-4xl font-bold leading-tight tracking-[-0.04em] sm:text-5xl">
+                <h1 class="mt-6 max-w-4xl text-3xl font-bold leading-tight tracking-[-0.04em] sm:text-4xl lg:text-5xl">
                     {{ $article->title }}
                 </h1>
 

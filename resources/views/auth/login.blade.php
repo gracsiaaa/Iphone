@@ -4,8 +4,8 @@
 
 @section('content')
     <section class="page-section">
-        <div class="site-shell flex min-h-[560px] items-center justify-center">
-            <div class="surface w-full max-w-md p-7 sm:p-9">
+        <div class="site-shell flex min-h-[420px] sm:min-h-[560px] items-center justify-center">
+            <div class="surface w-full max-w-md p-5 sm:p-9">
                 <div class="text-center">
                     <img
                         src="{{ asset('images/logo-mark.svg') }}"
