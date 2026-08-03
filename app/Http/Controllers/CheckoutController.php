@@ -6,6 +6,7 @@ use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Services\InvoiceNumberService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -60,7 +61,7 @@ class CheckoutController extends Controller
             'notes' => ['nullable', 'string', 'max:1000'],
         ]);
 
-        $cart = $request->session()->get('cart', []);
+        $cart = CartController::cartFromSession($request);
 
         if (empty($cart)) {
             return redirect()
@@ -75,7 +76,8 @@ class CheckoutController extends Controller
                 $request,
                 $invoiceNumberService
             ): Order {
-                $products = Product::query()
+                $variants = ProductVariant::query()
+                    ->with('product')
                     ->whereIn('id', array_keys($cart))
                     ->lockForUpdate()
                     ->get()
@@ -89,37 +91,40 @@ class CheckoutController extends Controller
                     10
                 );
 
-                foreach ($cart as $productId => $quantity) {
-                    $product = $products->get((int) $productId);
+                foreach ($cart as $variantId => $quantity) {
+                    $variant = $variants->get((int) $variantId);
+                    $product = $variant?->product;
                     $quantity = (int) $quantity;
 
                     if (
+                        ! $variant ||
+                        ! $variant->is_active ||
                         ! $product ||
                         ! $product->is_active ||
                         $quantity < 1 ||
-                        $product->stock < $quantity
+                        $variant->stock < $quantity
                     ) {
                         throw new RuntimeException(
-                            'Stok salah satu produk telah berubah. Periksa kembali keranjang Anda.'
+                            'Stok salah satu varian telah berubah. Periksa kembali keranjang Anda.'
                         );
                     }
 
-                    $subtotal = (float) $product->price * $quantity;
+                    $subtotal = (float) $variant->price * $quantity;
 
                     $total += $subtotal;
                     $totalQuantity += $quantity;
 
                     $preparedItems->push([
                         'product' => $product,
+                        'variant' => $variant,
                         'quantity' => $quantity,
                         'subtotal' => $subtotal,
                     ]);
                 }
 
-                // Validasi utama di backend agar tidak bisa dilewati dari browser.
                 if ($totalQuantity < $minimumQuantity) {
                     throw new RuntimeException(
-                        "Minimal pembelian adalah {$minimumQuantity} unit. " .
+                        "Minimal pembelian adalah {$minimumQuantity} unit. ".
                         "Jumlah keranjang Anda hanya {$totalQuantity} unit."
                     );
                 }
@@ -132,22 +137,35 @@ class CheckoutController extends Controller
                     'total' => $total,
                 ]));
 
+                $affectedProductIds = [];
+
                 foreach ($preparedItems as $item) {
                     $product = $item['product'];
+                    $variant = $item['variant'];
 
                     $order->items()->create([
                         'product_id' => $product->id,
+                        'product_variant_id' => $variant->id,
                         'product_name' => $product->name,
                         'product_type' => $product->type,
+                        'product_ram' => $variant->ram,
                         'product_color' => $product->color,
-                        'product_capacity' => $product->capacity,
-                        'price' => $product->price,
+                        'product_capacity' => $variant->storage,
+                        'price' => $variant->price,
                         'quantity' => $item['quantity'],
                         'subtotal' => $item['subtotal'],
                     ]);
 
-                    // Stok dicadangkan ketika invoice dibuat.
-                    $product->decrement('stock', $item['quantity']);
+                    $variant->decrement('stock', $item['quantity']);
+                    $affectedProductIds[] = $product->id;
+                }
+
+                foreach (array_unique($affectedProductIds) as $productId) {
+                    Product::whereKey($productId)->update([
+                        'stock' => ProductVariant::active()
+                            ->where('product_id', $productId)
+                            ->sum('stock'),
+                    ]);
                 }
 
                 Payment::create([
@@ -181,10 +199,8 @@ class CheckoutController extends Controller
             );
     }
 
-    public function confirmPayment(
-        Request $request,
-        Order $order
-    ): RedirectResponse {
+    public function confirmPayment(Request $request, Order $order): RedirectResponse
+    {
         abort_unless($order->user_id === $request->user()->id, 403);
 
         abort_unless(

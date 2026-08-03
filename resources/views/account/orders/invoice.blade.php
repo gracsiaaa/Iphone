@@ -89,7 +89,7 @@
                             <tr>
                                 <td><strong>{{ $item->product_name }}</strong></td>
                                 <td>
-                                    {{ $item->product_capacity }} · {{ $item->product_color }}
+                                    {{ $item->product_ram ? 'RAM '.$item->product_ram.' · ' : '' }}{{ $item->product_capacity }} · {{ $item->product_color }}
                                 </td>
                                 <td class="text-right">
                                     {{ 'Rp'.number_format((float) $item->price, 0, ',', '.') }}
