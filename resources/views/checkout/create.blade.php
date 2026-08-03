@@ -11,10 +11,6 @@
         <h1 class="mt-2 text-3xl font-bold tracking-tight text-zinc-950 lg:text-4xl">
             Selesaikan Pesanan
         </h1>
-        <p class="mt-3 text-zinc-500">
-            Total {{ $totalQuantity }} unit. Minimal pembelian
-            {{ $minimumQuantity }} unit telah terpenuhi.
-        </p>
     </div>
 
     <form
@@ -141,10 +137,6 @@
                             {{ \App\Support\Money::rupiah($total) }}
                         </strong>
                     </div>
-
-                    <p class="rounded-xl bg-blue-50 p-3 text-xs leading-5 text-blue-700">
-                        Setelah invoice dibuat, lakukan pembayaran melalui QRIS dan kirim konfirmasi pembayaran.
-                    </p>
 
                     <button type="submit" class="btn-primary w-full">
                         Buat Invoice

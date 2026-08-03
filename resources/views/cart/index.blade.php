@@ -11,10 +11,6 @@
         <h1 class="mt-2 text-3xl font-bold tracking-tight text-zinc-950 lg:text-4xl">
             Keranjang Belanja
         </h1>
-        <p class="mt-3 text-zinc-500">
-            Minimal pembelian {{ $minimumQuantity }} unit dalam satu transaksi.
-            Produk boleh terdiri dari beberapa tipe, kapasitas, dan warna.
-        </p>
     </div>
 
     @if ($items->isEmpty())
@@ -41,64 +37,47 @@
                             <img
                                 src="{{ $product->primary_image_url }}"
                                 alt="{{ $product->name }}"
-                                class="h-28 w-full rounded-2xl bg-zinc-100 object-contain p-3 sm:w-28"
+                                class="h-28 w-full sm:w-28 shrink-0 rounded-2xl bg-zinc-100 object-contain p-3"
                             >
 
                             <div class="min-w-0 flex-1">
-                                <a
-                                    href="{{ route('products.show', $product) }}"
-                                    class="text-lg font-bold text-zinc-950 hover:text-blue-600"
-                                >
+                                <a href="{{ route('products.show', $product) }}" class="text-lg font-bold text-zinc-950 hover:text-blue-600">
                                     {{ $product->name }}
                                 </a>
-
                                 <p class="mt-1 text-sm text-zinc-500">
                                     {{ $product->capacity }} · {{ $product->color }}
                                 </p>
-
                                 <p class="mt-3 font-semibold text-zinc-900">
                                     {{ \App\Support\Money::rupiah($product->price) }} / unit
                                 </p>
                             </div>
 
-                            <div class="sm:w-44">
-                                <form
-                                    action="{{ route('cart.update', $product) }}"
-                                    method="POST"
-                                    class="flex flex-col gap-2 min-[420px]:flex-row min-[420px]:items-center"
-                                >
+                            <div class="shrink-0 sm:w-48">
+                                <form action="{{ route('cart.update', $product) }}" method="POST" class="flex flex-col gap-2 min-[420px]:flex-row min-[420px]:items-center">
                                     @csrf
                                     @method('PUT')
-
                                     <input
                                         type="number"
                                         name="quantity"
                                         min="1"
                                         max="{{ $product->stock }}"
                                         value="{{ $item['quantity'] }}"
-                                        class="input !py-2.5 text-center"
+                                        class="input w-full min-[420px]:w-20 !py-2.5 text-center" 
                                         aria-label="Jumlah {{ $product->name }}"
                                     >
-
-                                    <button type="submit" class="btn-secondary !px-3 !py-2.5">
+                                    <button type="submit" class="btn-secondary w-full min-[420px]:w-auto !px-3 !py-2.5">
                                         Ubah
                                     </button>
                                 </form>
-
-                                <form
-                                    action="{{ route('cart.destroy', $product) }}"
-                                    method="POST"
-                                    class="mt-2 text-left min-[420px]:text-right"
-                                    onsubmit="return confirm('Hapus produk ini dari keranjang?')"
-                                >
+                                <form action="{{ route('cart.destroy', $product) }}" method="POST" class="mt-3 text-left min-[420px]:text-right" onsubmit="return confirm('Hapus produk ini dari keranjang?')">
                                     @csrf
                                     @method('DELETE')
-
-                                    <button type="submit" class="text-sm font-semibold text-red-600">
+                                    <button type="submit" class="text-sm font-semibold text-red-600 hover:text-red-700">
                                         Hapus
                                     </button>
                                 </form>
                             </div>
+                            
                         </div>
 
                         <div class="mt-5 flex flex-wrap justify-between gap-3 border-t border-zinc-100 pt-4 text-sm">

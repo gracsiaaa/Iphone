@@ -79,17 +79,9 @@
                             <a href="{{ route('login') }}" class="btn-primary">
                                 Login untuk Membeli
                             </a>
-                            <p class="field-note">
-                                Anda tetap dapat melihat katalog tanpa login.
-                            </p>
                         </div>
                     @endauth
 
-                    <div class="mt-8 grid gap-3 border-t border-zinc-200 pt-6 text-sm text-zinc-600">
-                        <div>✓ Pembayaran QRIS manual</div>
-                        <div>✓ Invoice tercatat di akun</div>
-                        <div>✓ Verifikasi pembayaran oleh Admin</div>
-                    </div>
                 </div>
             </div>
         </div>
