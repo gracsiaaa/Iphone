@@ -77,7 +77,7 @@
                 </div>
 
                 <div class="mt-5 flex flex-wrap gap-3">
-                    <button class="btn-primary">Terapkan Filter</button>
+                    <button class="btn-primary">Cari</button>
                     <a href="{{ route('products.index') }}" class="btn-secondary">Reset</a>
                 </div>
             </form>

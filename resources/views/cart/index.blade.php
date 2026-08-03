@@ -135,10 +135,6 @@
                     </div>
 
                     @if ($canCheckout)
-                        <div class="mt-5 rounded-xl bg-emerald-50 p-4 text-sm text-emerald-700">
-                            Jumlah minimum sudah terpenuhi. Kamu dapat melanjutkan checkout.
-                        </div>
-
                         <a
                             href="{{ route('checkout.create') }}"
                             class="btn-primary mt-5 w-full text-center"
