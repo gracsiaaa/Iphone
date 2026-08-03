@@ -1,12 +1,17 @@
 @props(['product'])
 
+@php
+    $ramSummary = $product->variants->pluck('ram')->unique()->implode(', ');
+    $storageSummary = $product->variants->pluck('storage')->unique()->implode(', ');
+@endphp
+
 <article class="product-card">
     <a
         href="{{ route('products.show', $product) }}"
         class="product-image-wrap block aspect-square w-full"
     >
         <img
-            src="{{ $product->primary_image_url }}" 
+            src="{{ $product->primary_image_url }}"
             alt="{{ $product->name }}"
             class="h-full w-full bg-white object-contain p-4 sm:p-5"
         >
@@ -14,18 +19,18 @@
         <span
             @class([
                 'badge absolute left-3 top-3',
-                'badge-success' => $product->stock > 3,
-                'badge-warning' => $product->stock > 0 && $product->stock <= 3,
-                'badge-danger' => $product->stock < 1,
+                'badge-success' => $product->total_stock > 3,
+                'badge-warning' => $product->total_stock > 0 && $product->total_stock <= 3,
+                'badge-danger' => $product->total_stock < 1,
             ])
         >
-            {{ $product->stock > 0 ? 'Stok '.$product->stock : 'Stok habis' }}
+            {{ $product->total_stock > 0 ? 'Stok '.$product->total_stock : 'Stok habis' }}
         </span>
     </a>
 
     <div class="product-content">
         <p class="product-meta">
-            {{ $product->capacity }} · {{ $product->color }}
+            RAM {{ $ramSummary }} · Storage {{ $storageSummary }}
         </p>
 
         <h3 class="product-name">
@@ -42,22 +47,9 @@
                 </p>
             </div>
 
-            @auth
-                <form action="{{ route('cart.store', $product) }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="quantity" value="1">
-                    <button
-                        class="btn-ghost !px-3"
-                        {{ $product->stock < 1 ? 'disabled' : '' }}
-                    >
-                        + Keranjang
-                    </button>
-                </form>
-            @else
-                <a href="{{ route('login') }}" class="text-link">
-                    Login
-                </a>
-            @endauth
+            <a href="{{ route('products.show', $product) }}" class="btn-ghost !px-3">
+                Pilih Varian
+            </a>
         </div>
     </div>
 </article>

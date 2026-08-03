@@ -113,12 +113,12 @@
                 </div>
 
                 <div class="mt-4 space-y-3">
-                    @forelse($lowStockProducts as $product)
+                    @forelse($lowStockProducts as $variant)
                         <div class="flex justify-between gap-4 text-sm">
                             <span class="truncate">
-                                {{ $product->name }} {{ $product->capacity }}
+                                {{ $variant->product->name }} RAM {{ $variant->ram }} / {{ $variant->storage }}
                             </span>
-                            <strong class="text-red-600">{{ $product->stock }}</strong>
+                            <strong class="text-red-600">{{ $variant->stock }}</strong>
                         </div>
                     @empty
                         <p class="text-muted">Tidak ada stok menipis.</p>

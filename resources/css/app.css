@@ -300,7 +300,7 @@
     }
 
     .data-table {
-        @apply min-w-[680px] text-sm;
+        @apply w-full min-w-[900px] text-sm;
     }
 
     .data-table-compact {

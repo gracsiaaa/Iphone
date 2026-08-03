@@ -12,9 +12,24 @@ class HomeController extends Controller
     public function __invoke(): View
     {
         return view('home', [
-            'featuredProducts' => Product::active()->with('images')->where('is_featured', true)->latest()->take(8)->get(),
-            'latestProducts' => Product::active()->with('images')->latest()->take(8)->get(),
-            'latestArticles' => Article::published()->with('author')->latest('published_at')->take(3)->get(),
+            'featuredProducts' => Product::active()
+                ->whereHas('variants')
+                ->with(['images', 'variants'])
+                ->where('is_featured', true)
+                ->latest()
+                ->take(8)
+                ->get(),
+            'latestProducts' => Product::active()
+                ->whereHas('variants')
+                ->with(['images', 'variants'])
+                ->latest()
+                ->take(8)
+                ->get(),
+            'latestArticles' => Article::published()
+                ->with('author')
+                ->latest('published_at')
+                ->take(3)
+                ->get(),
             'faqs' => Faq::active()->orderBy('sort_order')->take(5)->get(),
         ]);
     }

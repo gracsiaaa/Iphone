@@ -41,7 +41,7 @@
                                     <div>
                                         <strong>{{ $item->product_name }}</strong>
                                         <p class="text-muted mt-1">
-                                            {{ $item->product_capacity }} ·
+                                            {{ $item->product_ram ? 'RAM '.$item->product_ram.' · ' : '' }}{{ $item->product_capacity }} ·
                                             {{ $item->product_color }} ·
                                             {{ $item->quantity }} unit
                                         </p>

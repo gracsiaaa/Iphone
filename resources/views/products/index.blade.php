@@ -13,7 +13,7 @@
     <section class="page-section">
         <div class="site-shell">
             <form method="GET" class="surface panel-padding">
-                <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+                <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
                     <div class="field sm:col-span-2 xl:col-span-2">
                         <label class="label" for="search">Cari produk</label>
                         <input
@@ -27,12 +27,24 @@
                     </div>
 
                     <div class="field">
-                        <label class="label" for="capacity">Kapasitas</label>
-                        <select id="capacity" class="input" name="capacity">
-                            <option value="">Semua kapasitas</option>
-                            @foreach($capacities as $capacity)
-                                <option @selected(request('capacity') == $capacity)>
-                                    {{ $capacity }}
+                        <label class="label" for="ram">RAM</label>
+                        <select id="ram" class="input" name="ram">
+                            <option value="">Semua RAM</option>
+                            @foreach($rams as $ram)
+                                <option value="{{ $ram }}" @selected(request('ram') == $ram)>
+                                    {{ $ram }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label class="label" for="storage">Storage</label>
+                        <select id="storage" class="input" name="storage">
+                            <option value="">Semua storage</option>
+                            @foreach($storages as $storage)
+                                <option value="{{ $storage }}" @selected(request('storage') == $storage)>
+                                    {{ $storage }}
                                 </option>
                             @endforeach
                         </select>
@@ -43,7 +55,7 @@
                         <select id="color" class="input" name="color">
                             <option value="">Semua warna</option>
                             @foreach($colors as $color)
-                                <option @selected(request('color') == $color)>
+                                <option value="{{ $color }}" @selected(request('color') == $color)>
                                     {{ $color }}
                                 </option>
                             @endforeach
@@ -52,42 +64,44 @@
 
                     <div class="field">
                         <label class="label" for="sort">Urutkan</label>
-                        <div class="flex flex-col gap-2 min-[420px]:flex-row">
-                            <select id="sort" class="input" name="sort">
-                                <option value="">Terbaru</option>
-                                <option
-                                    value="price_low"
-                                    @selected(request('sort') === 'price_low')
-                                >
-                                    Harga terendah
-                                </option>
-                                <option
-                                    value="price_high"
-                                    @selected(request('sort') === 'price_high')
-                                >
-                                    Harga tertinggi
-                                </option>
-                            </select>
-                            <button class="btn-primary w-full !px-4 min-[420px]:w-auto">Cari</button>
-                        </div>
+                        <select id="sort" class="input" name="sort">
+                            <option value="">Produk terbaru</option>
+                            <option value="price_low" @selected(request('sort') === 'price_low')>
+                                Harga terendah
+                            </option>
+                            <option value="price_high" @selected(request('sort') === 'price_high')>
+                                Harga tertinggi
+                            </option>
+                        </select>
                     </div>
+                </div>
+
+                <div class="mt-5 flex flex-wrap gap-3">
+                    <button class="btn-primary">Terapkan Filter</button>
+                    <a href="{{ route('products.index') }}" class="btn-secondary">Reset</a>
                 </div>
             </form>
 
-            <div class="product-grid mt-8">
-                @forelse($products as $product)
-                    <x-product-card :product="$product" />
-                @empty
-                    <div class="empty-state sm:col-span-2 lg:col-span-4">
-                        <h2 class="font-bold">Produk tidak ditemukan</h2>
-                        <p class="text-muted mt-2">Ubah kata kunci atau filter pencarian.</p>
-                    </div>
-                @endforelse
+            <div class="mt-8 flex items-center justify-between gap-4">
+                <p class="text-sm text-zinc-500">
+                    Menampilkan {{ $products->count() }} dari {{ $products->total() }} produk
+                </p>
             </div>
 
-            <div class="mt-8">
-                {{ $products->links() }}
-            </div>
+            @if($products->isNotEmpty())
+                <div class="product-grid mt-6">
+                    @foreach($products as $product)
+                        <x-product-card :product="$product" />
+                    @endforeach
+                </div>
+
+                <div class="mt-8">{{ $products->links() }}</div>
+            @else
+                <div class="surface mt-6 p-10 text-center">
+                    <h2 class="text-xl font-bold text-zinc-950">Produk tidak ditemukan</h2>
+                    <p class="mt-2 text-zinc-500">Ubah kombinasi filter RAM, storage, atau warna.</p>
+                </div>
+            @endif
         </div>
     </section>
 @endsection
