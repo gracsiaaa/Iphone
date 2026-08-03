@@ -5,14 +5,10 @@
 @section('eyebrow', 'Katalog')
 
 @section('content')
-    <div class="mb-6 space-y-3 lg:flex lg:items-center lg:justify-between lg:space-y-0">
-        <form
-            method="GET"
-            action="{{ route('admin.products.index') }}"
-            class="flex w-full items-center gap-2 lg:max-w-xl"
-        >
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <form method="GET" class="flex w-full max-w-lg items-center gap-2">
             <input
-                type="text"
+                class="input w-full flex-1"
                 name="search"
                 value="{{ request('search') }}"
                 class="input min-w-0 flex-1"
