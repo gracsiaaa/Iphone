@@ -27,26 +27,138 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $products = [
-            ['iPhone 11','iPhone 11','128 GB','Black',5200000,12],
-            ['iPhone 12','iPhone 12','128 GB','Blue',6800000,10],
-            ['iPhone 12 Pro','iPhone 12 Pro','256 GB','Pacific Blue',8500000,7],
-            ['iPhone 13','iPhone 13','128 GB','Midnight',8200000,15],
-            ['iPhone 13','iPhone 13','256 GB','Starlight',9300000,8],
-            ['iPhone 13 Pro','iPhone 13 Pro','256 GB','Sierra Blue',11200000,5],
-            ['iPhone 14','iPhone 14','128 GB','Purple',10750000,11],
-            ['iPhone 14 Pro','iPhone 14 Pro','256 GB','Deep Purple',14200000,4],
-            ['iPhone 15','iPhone 15','128 GB','Pink',13250000,9],
-            ['iPhone 15 Pro','iPhone 15 Pro','256 GB','Natural Titanium',17750000,6],
-            ['iPhone 16','iPhone 16','256 GB','Ultramarine',16900000,10],
-            ['iPhone 16 Pro','iPhone 16 Pro','256 GB','Desert Titanium',20900000,3],
+            [
+                'name' => 'iPhone 11',
+                'type' => 'iPhone 11',
+                'color' => 'Black',
+                'variants' => [
+                    ['ram' => '4 GB', 'storage' => '64 GB', 'price' => 4_700_000, 'stock' => 8],
+                    ['ram' => '4 GB', 'storage' => '128 GB', 'price' => 5_200_000, 'stock' => 12],
+                ],
+            ],
+            [
+                'name' => 'iPhone 12',
+                'type' => 'iPhone 12',
+                'color' => 'Blue',
+                'variants' => [
+                    ['ram' => '4 GB', 'storage' => '64 GB', 'price' => 6_100_000, 'stock' => 7],
+                    ['ram' => '4 GB', 'storage' => '128 GB', 'price' => 6_800_000, 'stock' => 10],
+                    ['ram' => '4 GB', 'storage' => '256 GB', 'price' => 7_600_000, 'stock' => 5],
+                ],
+            ],
+            [
+                'name' => 'iPhone 12 Pro',
+                'type' => 'iPhone 12 Pro',
+                'color' => 'Pacific Blue',
+                'variants' => [
+                    ['ram' => '6 GB', 'storage' => '128 GB', 'price' => 7_900_000, 'stock' => 5],
+                    ['ram' => '6 GB', 'storage' => '256 GB', 'price' => 8_500_000, 'stock' => 7],
+                ],
+            ],
+            [
+                'name' => 'iPhone 13',
+                'type' => 'iPhone 13',
+                'color' => 'Midnight',
+                'variants' => [
+                    ['ram' => '4 GB', 'storage' => '128 GB', 'price' => 8_200_000, 'stock' => 15],
+                    ['ram' => '4 GB', 'storage' => '256 GB', 'price' => 9_300_000, 'stock' => 8],
+                ],
+            ],
+            [
+                'name' => 'iPhone 13 Pro',
+                'type' => 'iPhone 13 Pro',
+                'color' => 'Sierra Blue',
+                'variants' => [
+                    ['ram' => '6 GB', 'storage' => '128 GB', 'price' => 10_400_000, 'stock' => 6],
+                    ['ram' => '6 GB', 'storage' => '256 GB', 'price' => 11_200_000, 'stock' => 5],
+                ],
+            ],
+            [
+                'name' => 'iPhone 14',
+                'type' => 'iPhone 14',
+                'color' => 'Purple',
+                'variants' => [
+                    ['ram' => '6 GB', 'storage' => '128 GB', 'price' => 10_750_000, 'stock' => 11],
+                    ['ram' => '6 GB', 'storage' => '256 GB', 'price' => 11_900_000, 'stock' => 7],
+                ],
+            ],
+            [
+                'name' => 'iPhone 14 Pro',
+                'type' => 'iPhone 14 Pro',
+                'color' => 'Deep Purple',
+                'variants' => [
+                    ['ram' => '6 GB', 'storage' => '128 GB', 'price' => 13_100_000, 'stock' => 5],
+                    ['ram' => '6 GB', 'storage' => '256 GB', 'price' => 14_200_000, 'stock' => 4],
+                ],
+            ],
+            [
+                'name' => 'iPhone 15',
+                'type' => 'iPhone 15',
+                'color' => 'Pink',
+                'variants' => [
+                    ['ram' => '6 GB', 'storage' => '128 GB', 'price' => 13_250_000, 'stock' => 9],
+                    ['ram' => '6 GB', 'storage' => '256 GB', 'price' => 14_600_000, 'stock' => 6],
+                ],
+            ],
+            [
+                'name' => 'iPhone 15 Pro',
+                'type' => 'iPhone 15 Pro',
+                'color' => 'Natural Titanium',
+                'variants' => [
+                    ['ram' => '8 GB', 'storage' => '128 GB', 'price' => 16_500_000, 'stock' => 4],
+                    ['ram' => '8 GB', 'storage' => '256 GB', 'price' => 17_750_000, 'stock' => 6],
+                    ['ram' => '8 GB', 'storage' => '512 GB', 'price' => 20_500_000, 'stock' => 3],
+                ],
+            ],
+            [
+                'name' => 'iPhone 16 Pro',
+                'type' => 'iPhone 16 Pro',
+                'color' => 'Desert Titanium',
+                'variants' => [
+                    ['ram' => '8 GB', 'storage' => '128 GB', 'price' => 19_600_000, 'stock' => 5],
+                    ['ram' => '8 GB', 'storage' => '256 GB', 'price' => 20_900_000, 'stock' => 3],
+                    ['ram' => '8 GB', 'storage' => '512 GB', 'price' => 23_500_000, 'stock' => 2],
+                ],
+            ],
         ];
 
-        foreach ($products as $i => [$name,$type,$capacity,$color,$price,$stock]) {
-            $slug = Str::slug("$name-$capacity-$color");
-            $product = Product::updateOrCreate(['slug' => $slug], [
-                'name'=>$name,'type'=>$type,'capacity'=>$capacity,'color'=>$color,'price'=>$price,'stock'=>$stock,'description'=>"Stok $name varian $capacity warna $color untuk kebutuhan reseller. Harga dan stok dapat diperbarui langsung melalui dashboard Admin.",'is_active'=>true,'is_featured'=>$i < 4,
+        foreach ($products as $index => $productData) {
+            $variants = collect($productData['variants']);
+            $firstVariant = $variants->first();
+            $slug = Str::slug($productData['name'].'-'.$productData['color']);
+
+            $product = Product::updateOrCreate([
+                'name' => $productData['name'],
+                'color' => $productData['color'],
+            ], [
+                'slug' => $slug,
+                'type' => $productData['type'],
+                'capacity' => $firstVariant['storage'],
+                'price' => $variants->min('price'),
+                'stock' => $variants->sum('stock'),
+                'description' => "Stok {$productData['name']} dengan pilihan RAM dan storage untuk kebutuhan reseller. Harga dan stok dicatat per kombinasi varian.",
+                'is_active' => true,
+                'is_featured' => $index < 4,
             ]);
-            if (!$product->images()->exists()) $product->images()->create(['path'=>'products/demo-product.svg','is_primary'=>true,'sort_order'=>0]);
+
+            foreach ($variants as $variantData) {
+                $product->allVariants()->updateOrCreate([
+                    'ram' => $variantData['ram'],
+                    'storage' => $variantData['storage'],
+                ], [
+                    'price' => $variantData['price'],
+                    'stock' => $variantData['stock'],
+                    'is_active' => true,
+                ]);
+            }
+
+            if (! $product->images()->exists()) {
+                $product->images()->create([
+                    'path' => 'products/demo-product.svg',
+                    'is_primary' => true,
+                    'sort_order' => 0,
+                ]);
+            }
         }
 
         $articleData = [

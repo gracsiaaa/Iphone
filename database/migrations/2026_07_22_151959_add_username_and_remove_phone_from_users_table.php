@@ -11,95 +11,111 @@ return new class extends Migration
     public function up(): void
     {
         /*
-         * Tambahkan username sebagai nullable terlebih dahulu.
-         * Hal ini diperlukan karena tabel users mungkin sudah memiliki data.
+         * Database lama mungkin sudah mempunyai kolom username walaupun
+         * migrasi ini belum tercatat selesai. Karena itu, kolom hanya dibuat
+         * ketika benar-benar belum tersedia.
          */
-        Schema::table('users', function (Blueprint $table) {
-            $table
-                ->string('username', 50)
-                ->nullable()
-                ->after('name');
-        });
+        if (! Schema::hasColumn('users', 'username')) {
+            Schema::table('users', function (Blueprint $table): void {
+                $table
+                    ->string('username', 50)
+                    ->nullable()
+                    ->after('name');
+            });
+        }
 
         /*
-         * Buat username awal untuk akun yang sudah ada.
-         * Username diambil dari bagian email sebelum tanda @.
+         * Lengkapi username yang kosong dan rapikan username duplikat.
+         * Username yang sudah valid tetap dipertahankan.
          */
+        $usedUsernames = [];
+
         $users = DB::table('users')
-            ->select('id', 'name', 'email')
+            ->select('id', 'name', 'email', 'username')
             ->orderBy('id')
             ->get();
 
         foreach ($users as $user) {
-            $source = Str::before((string) $user->email, '@');
+            $currentUsername = trim((string) $user->username);
+            $source = $currentUsername !== ''
+                ? $currentUsername
+                : Str::before((string) $user->email, '@');
 
-            $baseUsername = Str::slug(
-                $source ?: $user->name ?: 'user',
-                '_'
-            );
+            if (trim($source) === '') {
+                $source = (string) $user->name;
+            }
 
-            $baseUsername = Str::lower($baseUsername);
+            $baseUsername = Str::lower(Str::slug($source, '_'));
 
             if ($baseUsername === '') {
                 $baseUsername = 'user';
             }
 
-            $baseUsername = Str::limit(
-                $baseUsername,
-                35,
-                ''
-            );
-
+            // Sisakan ruang untuk akhiran ID jika terjadi duplikasi.
+            $baseUsername = Str::limit($baseUsername, 40, '');
             $username = $baseUsername;
             $counter = 1;
 
-            while (
-                DB::table('users')
-                ->where('username', $username)
-                ->exists()
-            ) {
-                $username = $baseUsername
-                    . '_'
-                    . $user->id
-                    . '_'
-                    . $counter;
+            while (isset($usedUsernames[Str::lower($username)])) {
+                $suffix = '_' . $user->id;
 
+                if ($counter > 1) {
+                    $suffix .= '_' . $counter;
+                }
+
+                $availableLength = max(1, 50 - strlen($suffix));
+                $username = Str::limit($baseUsername, $availableLength, '') . $suffix;
                 $counter++;
             }
 
-            DB::table('users')
-                ->where('id', $user->id)
-                ->update([
-                    'username' => $username,
-                ]);
+            if ($currentUsername !== $username) {
+                DB::table('users')
+                    ->where('id', $user->id)
+                    ->update(['username' => $username]);
+            }
+
+            $usedUsernames[Str::lower($username)] = true;
         }
 
         /*
-         * Setelah semua user mempunyai username,
-         * ubah menjadi wajib dan tambahkan unique index.
+         * Setelah tidak ada nilai kosong, jadikan username wajib.
          */
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table): void {
             $table
                 ->string('username', 50)
                 ->nullable(false)
                 ->change();
         });
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->unique('username');
-            $table->dropColumn('phone');
-        });
+        /*
+         * Tambahkan unique index hanya jika belum tersedia.
+         */
+        if (! Schema::hasIndex('users', ['username'], 'unique')) {
+            Schema::table('users', function (Blueprint $table): void {
+                $table->unique('username');
+            });
+        }
     }
 
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table
-                ->string('phone', 30)
-                ->nullable()
-                ->after('email');
+        if (! Schema::hasColumn('users', 'username')) {
+            return;
+        }
 
-            $table->dropUnique(['username']);
+        foreach (Schema::getIndexes('users') as $index) {
+            $columns = array_map('strtolower', $index['columns'] ?? []);
+
+            if (($index['unique'] ?? false) && $columns === ['username']) {
+                Schema::table('users', function (Blueprint $table) use ($index): void {
+                    $table->dropUnique($index['name']);
+                });
+
+                break;
+            }
+        }
+
+        Schema::table('users', function (Blueprint $table): void {
             $table->dropColumn('username');
         });
     }

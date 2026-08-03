@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Keranjang Belanja')
+@section('title', 'Keranjang')
 
 @section('content')
 <section class="container-site py-10 lg:py-14">
@@ -11,82 +11,101 @@
         <h1 class="mt-2 text-3xl font-bold tracking-tight text-zinc-950 lg:text-4xl">
             Keranjang Belanja
         </h1>
+        <p class="mt-3 text-zinc-500">
+            Setiap item menyimpan kombinasi RAM dan storage yang kamu pilih.
+        </p>
     </div>
 
     @if ($items->isEmpty())
-        <div class="card px-6 py-16 text-center">
-            <h2 class="text-xl font-bold text-zinc-900">Keranjang masih kosong</h2>
-            <p class="mt-2 text-zinc-500">
-                Tambahkan produk hingga jumlahnya mencapai minimal
-                {{ $minimumQuantity }} unit.
-            </p>
-            <a href="{{ route('products.index') }}" class="btn-primary mt-6">
+        <div class="card p-10 text-center">
+            <h2 class="text-xl font-bold text-zinc-950">Keranjang masih kosong</h2>
+            <p class="mt-2 text-zinc-500">Pilih produk dan variasi yang tersedia.</p>
+            <a href="{{ route('products.index') }}" class="btn-primary mt-6 inline-flex">
                 Lihat Produk
             </a>
         </div>
     @else
-        <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,1fr)_390px]">
             <div class="space-y-4">
                 @foreach ($items as $item)
                     @php
                         $product = $item['product'];
+                        $variant = $item['variant'];
                     @endphp
 
                     <article class="card p-5 sm:p-6">
-                        <div class="flex flex-col gap-5 sm:flex-row sm:items-center">
+                        <div class="flex flex-col gap-5 sm:flex-row">
                             <img
                                 src="{{ $product->primary_image_url }}"
                                 alt="{{ $product->name }}"
-                                class="h-28 w-full sm:w-28 shrink-0 rounded-2xl bg-zinc-100 object-contain p-3"
+                                class="h-28 w-28 shrink-0 rounded-2xl bg-zinc-100 object-contain p-3"
                             >
 
                             <div class="min-w-0 flex-1">
-                                <a href="{{ route('products.show', $product) }}" class="text-lg font-bold text-zinc-950 hover:text-blue-600">
-                                    {{ $product->name }}
-                                </a>
-                                <p class="mt-1 text-sm text-zinc-500">
-                                    {{ $product->capacity }} · {{ $product->color }}
-                                </p>
-                                <p class="mt-3 font-semibold text-zinc-900">
-                                    {{ \App\Support\Money::rupiah($product->price) }} / unit
-                                </p>
-                            </div>
+                                <div class="flex flex-col gap-4 min-[420px]:flex-row min-[420px]:items-start min-[420px]:justify-between">
+                                    <div>
+                                        <h2 class="text-lg font-bold text-zinc-950">
+                                            {{ $product->name }}
+                                        </h2>
+                                        <p class="mt-1 text-sm text-zinc-500">
+                                            RAM {{ $variant->ram }} ·
+                                            {{ $variant->storage }} ·
+                                            {{ $product->color }}
+                                        </p>
+                                        <p class="mt-2 text-sm font-semibold text-zinc-900">
+                                            {{ \App\Support\Money::rupiah($variant->price) }} / unit
+                                        </p>
+                                    </div>
 
-                            <div class="shrink-0 sm:w-48">
-                                <form action="{{ route('cart.update', $product) }}" method="POST" class="flex flex-col gap-2 min-[420px]:flex-row min-[420px]:items-center">
-                                    @csrf
-                                    @method('PUT')
-                                    <input
-                                        type="number"
-                                        name="quantity"
-                                        min="1"
-                                        max="{{ $product->stock }}"
-                                        value="{{ $item['quantity'] }}"
-                                        class="input w-full min-[420px]:w-20 !py-2.5 text-center" 
-                                        aria-label="Jumlah {{ $product->name }}"
-                                    >
-                                    <button type="submit" class="btn-secondary w-full min-[420px]:w-auto !px-3 !py-2.5">
-                                        Ubah
-                                    </button>
-                                </form>
-                                <form action="{{ route('cart.destroy', $product) }}" method="POST" class="mt-3 text-left min-[420px]:text-right" onsubmit="return confirm('Hapus produk ini dari keranjang?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-sm font-semibold text-red-600 hover:text-red-700">
-                                        Hapus
-                                    </button>
-                                </form>
-                            </div>
-                            
-                        </div>
+                                    <div class="shrink-0">
+                                        <form
+                                            action="{{ route('cart.update', $variant) }}"
+                                            method="POST"
+                                            class="flex items-center gap-2"
+                                        >
+                                            @csrf
+                                            @method('PUT')
 
-                        <div class="mt-5 flex flex-wrap justify-between gap-3 border-t border-zinc-100 pt-4 text-sm">
-                            <span class="text-zinc-500">
-                                Subtotal {{ $item['quantity'] }} unit
-                            </span>
-                            <strong class="text-zinc-950">
-                                {{ \App\Support\Money::rupiah($item['subtotal']) }}
-                            </strong>
+                                            <input
+                                                type="number"
+                                                name="quantity"
+                                                min="1"
+                                                max="{{ $variant->stock }}"
+                                                value="{{ $item['quantity'] }}"
+                                                class="input w-24"
+                                                aria-label="Jumlah {{ $product->name }}"
+                                            >
+
+                                            <button class="btn-secondary !px-3 !py-2.5">
+                                                Ubah
+                                            </button>
+                                        </form>
+
+                                        <form
+                                            action="{{ route('cart.destroy', $variant) }}"
+                                            method="POST"
+                                            class="mt-2 text-left min-[420px]:text-right"
+                                            onsubmit="return confirm('Hapus varian ini dari keranjang?')"
+                                        >
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit" class="text-sm font-semibold text-red-600">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="mt-5 flex flex-wrap justify-between gap-3 border-t border-zinc-100 pt-4 text-sm">
+                                    <span class="text-zinc-500">
+                                        Subtotal {{ $item['quantity'] }} unit
+                                    </span>
+                                    <strong class="text-zinc-950">
+                                        {{ \App\Support\Money::rupiah($item['subtotal']) }}
+                                    </strong>
+                                </div>
+                            </div>
                         </div>
                     </article>
                 @endforeach
@@ -117,7 +136,7 @@
 
                     @if ($canCheckout)
                         <div class="mt-5 rounded-xl bg-emerald-50 p-4 text-sm text-emerald-700">
-                            Jumlah minimum sudah terpenuhi. Anda dapat melanjutkan checkout.
+                            Jumlah minimum sudah terpenuhi. Kamu dapat melanjutkan checkout.
                         </div>
 
                         <a

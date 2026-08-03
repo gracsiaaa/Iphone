@@ -113,7 +113,8 @@
                                     {{ $item['product']->name }}
                                 </p>
                                 <p class="mt-1 text-xs text-zinc-500">
-                                    {{ $item['product']->capacity }} ·
+                                    RAM {{ $item['variant']->ram }} ·
+                                    {{ $item['variant']->storage }} ·
                                     {{ $item['product']->color }} ·
                                     {{ $item['quantity'] }} unit
                                 </p>

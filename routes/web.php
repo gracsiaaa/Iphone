@@ -43,8 +43,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.store');
-    Route::put('/cart/{product}', [CartController::class, 'update'])->name('cart.update');
-    Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::put('/cart/variants/{variant}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/variants/{variant}', [CartController::class, 'destroy'])->name('cart.destroy');
     Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::post('/orders/{order}/confirm-payment', [CheckoutController::class, 'confirmPayment'])->name('orders.confirm-payment');
