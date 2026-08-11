@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\ActivityLogger;
 use App\Services\InvoiceNumberService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -191,6 +192,13 @@ class CheckoutController extends Controller
 
         $request->session()->forget('cart');
 
+        ActivityLogger::log(
+            $request,
+            'order.created',
+            "Membuat pesanan {$order->invoice_number}",
+            $order
+        );
+
         return redirect()
             ->route('orders.show', $order)
             ->with(
@@ -237,6 +245,13 @@ class CheckoutController extends Controller
         $order->update([
             'status' => OrderStatus::WAITING_VERIFICATION,
         ]);
+
+        ActivityLogger::log(
+            $request,
+            'payment.submitted',
+            "Mengirim bukti pembayaran untuk {$order->invoice_number}",
+            $order
+        );
 
         return back()->with(
             'success',

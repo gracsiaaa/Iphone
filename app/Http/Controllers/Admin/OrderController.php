@@ -31,7 +31,13 @@ class OrderController extends Controller
 
     public function show(Order $order): View
     {
-        $order->load(['user', 'items', 'payment', 'verifier']);
+        $order->load([
+            'user',
+            'items',
+            'payment',
+            'verifier',
+            'activityLogs' => fn ($query) => $query->with('user')->oldest('created_at'),
+        ]);
 
         return view('admin.orders.show', compact('order'));
     }

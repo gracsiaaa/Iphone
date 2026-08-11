@@ -117,7 +117,7 @@
                                     ? \Illuminate\Support\Facades\Storage::url(
                                         $siteSettings->get('qris_path')
                                     )
-                                    : asset('images/qris-placeholder.svg') }}"
+                                    : asset('images/qris-placeholder.jpeg') }}"
                                 class="mx-auto mt-5 w-full max-w-xs rounded-xl border border-zinc-200"
                                 alt="QRIS"
                             >

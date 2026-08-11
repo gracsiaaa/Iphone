@@ -75,6 +75,65 @@
                     </div>
                 </div>
             </section>
+            <section class="surface overflow-hidden">
+                <div class="panel-header">
+                    <div>
+                        <h2 class="panel-title">Riwayat pesanan</h2>
+                        <p class="mt-1 text-xs text-zinc-500">Audit trail untuk invoice ini</p>
+                    </div>
+                    <span class="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-bold text-zinc-600">
+                        {{ $order->activityLogs->count() }} aktivitas
+                    </span>
+                </div>
+
+                <div class="p-5 sm:p-6">
+                    @forelse($order->activityLogs as $activity)
+                        @php
+                            [$dotClass, $badgeClass] = match ($activity->action) {
+                                'order.created' => ['bg-violet-500', 'bg-violet-50 text-violet-700'],
+                                'payment.submitted' => ['bg-amber-500', 'bg-amber-50 text-amber-700'],
+                                'order.approved' => ['bg-emerald-500', 'bg-emerald-50 text-emerald-700'],
+                                'order.rejected' => ['bg-red-500', 'bg-red-50 text-red-700'],
+                                'order.completed' => ['bg-green-600', 'bg-green-50 text-green-700'],
+                                default => ['bg-zinc-400', 'bg-zinc-100 text-zinc-700'],
+                            };
+                        @endphp
+
+                        <div class="relative flex gap-4 pb-7 last:pb-0">
+                            @if(! $loop->last)
+                                <div class="absolute left-[7px] top-5 h-[calc(100%-0.25rem)] w-px bg-zinc-200"></div>
+                            @endif
+                            <div class="relative mt-1.5 h-3.5 w-3.5 shrink-0 rounded-full {{ $dotClass }} ring-4 ring-white"></div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="rounded-full px-2.5 py-1 text-[11px] font-bold {{ $badgeClass }}">
+                                        {{ $activity->action_label }}
+                                    </span>
+                                    <span class="text-xs text-zinc-400">
+                                        {{ $activity->created_at->format('d M Y · H:i:s') }}
+                                    </span>
+                                </div>
+                                <p class="mt-2 text-sm font-semibold text-zinc-900">{{ $activity->description }}</p>
+                                <div class="mt-1 text-xs text-zinc-500">
+                                    Dilakukan oleh
+                                    <span class="font-bold text-zinc-700">{{ $activity->user?->name ?: 'System' }}</span>
+                                    @if($activity->user)
+                                        <span>({{ $activity->user->role->label() }})</span>
+                                    @endif
+                                    @if($activity->ip_address)
+                                        <span class="text-zinc-300">·</span>
+                                        <span class="font-mono text-[11px]">{{ $activity->ip_address }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="rounded-2xl border border-dashed border-zinc-300 bg-zinc-50 px-4 py-8 text-center text-sm text-zinc-500">
+                            Belum ada audit trail untuk pesanan ini.
+                        </div>
+                    @endforelse
+                </div>
+            </section>
         </div>
 
         <aside class="space-y-6">
@@ -98,6 +157,19 @@
                         <dt class="text-zinc-500">Diverifikasi</dt>
                         <dd>
                             {{ optional($order->verified_at)->format('d M H:i') ?: '-' }}
+                        </dd>
+                    </div>
+                    <div class="flex justify-between gap-4">
+                        <dt class="text-zinc-500">Diverifikasi oleh</dt>
+                        <dd class="text-right font-semibold">
+                            @if($order->verifier)
+                                {{ $order->verifier->name }}
+                                <span class="block text-[11px] font-normal text-zinc-400">
+                                    {{ $order->verifier->role->label() }}
+                                </span>
+                            @else
+                                -
+                            @endif
                         </dd>
                     </div>
                 </dl>

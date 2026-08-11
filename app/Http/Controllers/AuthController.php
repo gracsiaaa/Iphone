@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\UserRole;
 use App\Models\User;
+use App\Services\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,6 +57,12 @@ class AuthController extends Controller
                 'login' => 'Akun Anda sedang dinonaktifkan.',
             ]);
         }
+
+        ActivityLogger::log(
+            $request,
+            'auth.login',
+            'Login berhasil ke sistem'
+        );
 
         if ($request->user()->isAdmin()) {
             return redirect()->intended(route('admin.dashboard'));
@@ -117,6 +124,12 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
+        ActivityLogger::log(
+            $request,
+            'auth.register',
+            'Membuat akun reseller dan masuk ke sistem'
+        );
+
         return redirect()
             ->route('home')
             ->with('success', 'Akun reseller berhasil dibuat.');
@@ -124,6 +137,12 @@ class AuthController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
+        ActivityLogger::log(
+            $request,
+            'auth.logout',
+            'Logout dari sistem'
+        );
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
