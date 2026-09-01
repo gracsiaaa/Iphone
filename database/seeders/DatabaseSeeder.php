@@ -22,6 +22,9 @@ class DatabaseSeeder extends Seeder
         $admin = User::updateOrCreate(['email' => 'admin@example.com'], [
             'name' => 'Administrator Toko', 'phone' => '081234567891', 'store_name' => 'iPhone Reseller Store', 'address' => 'Alamat toko utama', 'password' => Hash::make('Admin123!'), 'role' => UserRole::ADMIN, 'is_active' => true,
         ]);
+        $admin2 = User::updateOrCreate(['email' => 'admin2@example.com'], [
+            'name' => 'Administrator Toko 2', 'phone' => '081234567892', 'store_name' => 'iPhone Reseller Store', 'address' => 'Alamat toko utama', 'password' => Hash::make('Admin123!'), 'role' => UserRole::ADMIN, 'is_active' => true,
+        ]);
         User::updateOrCreate(['email' => 'reseller@example.com'], [
             'name' => 'Demo Reseller', 'phone' => '081234567892', 'store_name' => 'Demo Phone Shop', 'address' => 'Alamat demo reseller', 'password' => Hash::make('Reseller123!'), 'role' => UserRole::USER, 'is_active' => true,
         ]);

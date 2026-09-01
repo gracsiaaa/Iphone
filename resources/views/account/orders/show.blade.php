@@ -18,13 +18,15 @@
 
                 <div class="flex flex-wrap items-center gap-3">
                     <x-order-badge :status="$order->status" />
-                    <a
-                        href="{{ route('orders.invoice', $order) }}"
-                        target="_blank"
-                        class="btn-secondary !py-2.5"
-                    >
-                        Cetak Invoice
-                    </a>
+                    @if(in_array($order->status, [\App\Enums\OrderStatus::PAID, \App\Enums\OrderStatus::COMPLETED]))
+                        <a
+                            href="{{ route('orders.invoice', $order) }}"
+                            target="_blank"
+                            class="btn-secondary !py-2.5"
+                        >
+                            Cetak Invoice
+                        </a>
+                    @endif
                 </div>
             </div>
 

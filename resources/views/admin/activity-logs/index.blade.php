@@ -86,10 +86,6 @@
                     <div class="xl:col-span-4">
                         <label for="activity-q" class="label">Cari aktivitas</label>
                         <div class="relative">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" stroke-width="1.8">
-                                <circle cx="11" cy="11" r="8"/>
-                                <path d="m21 21-4.35-4.35" stroke-linecap="round"/>
-                            </svg>
                             <input
                                 id="activity-q"
                                 type="search"

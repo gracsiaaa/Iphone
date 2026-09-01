@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\ActivityLogger;
+use App\Services\InvoiceNumberService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -42,7 +43,7 @@ class OrderController extends Controller
         return view('admin.orders.show', compact('order'));
     }
 
-    public function approve(Request $request, Order $order): RedirectResponse
+    public function approve(Request $request, Order $order, InvoiceNumberService $invoiceNumberService): RedirectResponse
     {
         abort_unless(
             $order->status === OrderStatus::WAITING_VERIFICATION,
@@ -50,16 +51,19 @@ class OrderController extends Controller
             'Pesanan tidak sedang menunggu verifikasi.'
         );
 
-        DB::transaction(function () use ($order, $request): void {
+        DB::transaction(function () use ($order, $request, $invoiceNumberService): void {
+            $adminId = $request->user()->id;
+
             $order->update([
+                'invoice_number' => $invoiceNumberService->generateApproved($adminId),
                 'status' => OrderStatus::PAID,
                 'paid_at' => now(),
-                'verified_by' => $request->user()->id,
+                'verified_by' => $adminId,
                 'verified_at' => now(),
             ]);
             $order->payment()->update([
                 'status' => 'verified',
-                'verified_by' => $request->user()->id,
+                'verified_by' => $adminId,
                 'verified_at' => now(),
                 'admin_note' => $request->input('admin_note'),
             ]);
@@ -163,5 +167,66 @@ class OrderController extends Controller
         );
 
         return back()->with('success', 'Pesanan ditandai selesai.');
+    }
+
+    public function updateImei(Request $request, Order $order): RedirectResponse
+    {
+        $data = $request->validate([
+            'imei' => ['required', 'array'],
+            'imei.*' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $order->load('items');
+        $processedImeis = [];
+
+        foreach ($order->items as $item) {
+            if (isset($data['imei'][$item->id]) && trim($data['imei'][$item->id]) !== '') {
+                $rawString = $data['imei'][$item->id];
+                
+                // Bersihkan string dan pecah berdasarkan koma
+                $parts = array_filter(array_map('trim', explode(',', $rawString)));
+                
+                // Cek jumlah
+                if (count($parts) !== $item->quantity) {
+                    return back()->withErrors([
+                        'imei.'.$item->id => "Jumlah IMEI harus sama dengan quantity ({$item->quantity} unit)."
+                    ])->withInput();
+                }
+
+                // Cek duplikasi di input ini
+                if (count($parts) !== count(array_unique($parts))) {
+                    return back()->withErrors([
+                        'imei.'.$item->id => "Terdapat IMEI duplikat dalam input ini."
+                    ])->withInput();
+                }
+
+                $processedImeis[$item->id] = implode(', ', $parts);
+            } else {
+                // Jika IMEI kosong padahal wajib diisi (opsional: jika admin harus isi semua)
+                // Hapus blok error ini jika IMEI boleh dikosongkan sebagian
+                if ($item->quantity > 0) {
+                    return back()->withErrors([
+                        'imei.'.$item->id => "IMEI wajib diisi sebanyak {$item->quantity} unit."
+                    ])->withInput();
+                }
+                
+                $processedImeis[$item->id] = null;
+            }
+        }
+
+        foreach ($order->items as $item) {
+            if (array_key_exists($item->id, $processedImeis)) {
+                $item->update(['imei' => $processedImeis[$item->id]]);
+            }
+        }
+
+        ActivityLogger::log(
+            $request,
+            'order.imei_updated',
+            "Memperbarui IMEI untuk pesanan {$order->invoice_number}",
+            $order
+        );
+
+        return back()->with('success', 'Data IMEI berhasil disimpan.');
     }
 }

@@ -33,6 +33,11 @@
                                     {{ $item->product_color }} ·
                                     {{ $item->quantity }} unit
                                 </p>
+                                @if($item->imei)
+                                    <p class="mt-1 font-mono text-xs text-zinc-500">
+                                        IMEI: {{ $item->imei }}
+                                    </p>
+                                @endif
                             </div>
                             <strong class="text-right">
                                 {{ 'Rp'.number_format((float) $item->subtotal, 0, ',', '.') }}
@@ -46,6 +51,56 @@
                     <strong class="text-xl">{{ $order->formatted_total }}</strong>
                 </div>
             </section>
+
+            @if(in_array($order->status, [\App\Enums\OrderStatus::PAID, \App\Enums\OrderStatus::COMPLETED]))
+                <section class="surface overflow-hidden">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Nomor IMEI</h2>
+                    </div>
+
+                    <form
+                        action="{{ route('admin.orders.update-imei', $order) }}"
+                        method="POST"
+                        class="divide-y divide-zinc-100"
+                    >
+                        @csrf
+                        @method('PUT')
+
+                        @foreach($order->items as $item)
+                            <div class="p-5 sm:p-6">
+                                <label class="text-sm font-semibold text-zinc-900">
+                                    {{ $item->product_name }}
+                                    <span class="font-normal text-zinc-500">
+                                        ({{ $item->quantity }} unit)
+                                    </span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="imei[{{ $item->id }}]"
+                                    value="{{ old('imei.'.$item->id, $item->imei) }}"
+                                    class="input mt-2 imei-input"
+                                    data-quantity="{{ $item->quantity }}"
+                                    placeholder="Scan atau ketik IMEI di sini..."
+                                >
+                                <div class="mt-2 flex items-center justify-between">
+                                    @error('imei.'.$item->id)
+                                        <span class="text-xs font-medium text-red-500">{{ $message }}</span>
+                                    @else
+                                        <span class="text-xs text-zinc-400">Pisahkan dengan koma jika ketik manual.</span>
+                                    @enderror
+                                    <span class="imei-counter text-xs font-semibold text-zinc-500">
+                                        0 / {{ $item->quantity }}
+                                    </span>
+                                </div>
+                            </div>
+                        @endforeach
+
+                        <div class="bg-zinc-50 p-5 sm:p-6">
+                            <button class="btn-primary w-full">Simpan IMEI</button>
+                        </div>
+                    </form>
+                </section>
+            @endif
 
             <section class="surface panel-padding">
                 <h2 class="panel-title">Informasi reseller</h2>
@@ -259,3 +314,99 @@
         </aside>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('.imei-input');
+    
+    function updateCounter(input) {
+        const val = input.value.trim();
+        const parts = val ? val.split(',').map(s => s.trim()).filter(s => s.length > 0) : [];
+        const quantity = parseInt(input.getAttribute('data-quantity'), 10) || 0;
+        
+        const counterEl = input.parentElement.querySelector('.imei-counter');
+        if (counterEl) {
+            counterEl.textContent = parts.length + ' / ' + quantity;
+            if (parts.length === quantity) {
+                counterEl.classList.remove('text-zinc-500', 'text-red-500');
+                counterEl.classList.add('text-green-600');
+            } else if (parts.length > quantity) {
+                counterEl.classList.remove('text-zinc-500', 'text-green-600');
+                counterEl.classList.add('text-red-500');
+            } else {
+                counterEl.classList.remove('text-green-600', 'text-red-500');
+                counterEl.classList.add('text-zinc-500');
+            }
+        }
+    }
+
+    inputs.forEach(input => {
+        let scanBuffer = '';
+        let lastKeyTime = Date.now();
+
+        // Initial update
+        updateCounter(input);
+
+        input.addEventListener('input', function() {
+            updateCounter(this);
+        });
+
+        input.addEventListener('keydown', function(e) {
+            const currentTime = Date.now();
+            
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Prevent form submit
+                
+                // If it was a fast scan (e.g. 15 chars in < 200ms)
+                if (scanBuffer.length > 5 && (currentTime - lastKeyTime) < 500) {
+                    // Extract last 3 digits of the scanned string
+                    let last3 = scanBuffer.slice(-3);
+                    
+                    // Remove the raw scanned string that was typed into the input
+                    let currentValue = this.value;
+                    let valueWithoutBuffer = currentValue.slice(0, currentValue.length - scanBuffer.length).trim();
+                    
+                    // Clean up trailing comma
+                    if (valueWithoutBuffer.endsWith(',')) {
+                        valueWithoutBuffer = valueWithoutBuffer.slice(0, -1).trim();
+                    }
+                    
+                    // Append the extracted 3 digits
+                    if (valueWithoutBuffer) {
+                        this.value = valueWithoutBuffer + ', ' + last3 + ', ';
+                    } else {
+                        this.value = last3 + ', ';
+                    }
+                }
+                
+                scanBuffer = '';
+                updateCounter(this);
+                return;
+            }
+
+            // Keystroke tracking for scanner detection
+            if (e.key.length === 1) { // Normal character
+                if (currentTime - lastKeyTime > 100) { // Slow typing = human
+                    scanBuffer = e.key;
+                } else { // Fast typing = scanner
+                    scanBuffer += e.key;
+                }
+            } else {
+                scanBuffer = ''; // Reset on backspace, shift, etc.
+            }
+            
+            lastKeyTime = currentTime;
+        });
+
+        // Handle Paste event for bulk manual input
+        input.addEventListener('paste', function(e) {
+            // setTimeout to wait for the value to actually be inserted
+            setTimeout(() => {
+                updateCounter(this);
+            }, 10);
+        });
+    });
+});
+</script>
+@endpush

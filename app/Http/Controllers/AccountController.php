@@ -100,6 +100,12 @@ class AccountController extends Controller
             403
         );
 
+        abort_unless(
+            $request->user()->isAdmin() || in_array($order->status, [\App\Enums\OrderStatus::PAID, \App\Enums\OrderStatus::COMPLETED]),
+            403,
+            'Invoice baru tersedia setelah pembayaran disetujui admin.'
+        );
+
         $order->load(['items', 'payment', 'user']);
 
         return view('account.orders.invoice', compact('order'));

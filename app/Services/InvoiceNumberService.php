@@ -14,4 +14,24 @@ class InvoiceNumberService
 
         return $number;
     }
+
+    public function generateApproved(int $adminId): string
+    {
+        $date = now()->format('Ymd');
+        $adminPadded = str_pad((string) $adminId, 2, '0', STR_PAD_LEFT);
+        $prefix = $date.'-'.$adminPadded.'-';
+
+        $lastSequence = Order::query()
+            ->where('invoice_number', 'like', $prefix.'%')
+            ->orderByDesc('invoice_number')
+            ->value('invoice_number');
+
+        $nextSequence = 1;
+        if ($lastSequence) {
+            $parts = explode('-', $lastSequence);
+            $nextSequence = ((int) end($parts)) + 1;
+        }
+
+        return $prefix.str_pad((string) $nextSequence, 3, '0', STR_PAD_LEFT);
+    }
 }

@@ -19,6 +19,7 @@ class OrderItem extends Model
         'price',
         'quantity',
         'subtotal',
+        'imei',
     ];
 
     protected function casts(): array

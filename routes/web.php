@@ -63,6 +63,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin,superadm
     Route::post('/orders/{order}/approve', [AdminOrderController::class, 'approve'])->name('orders.approve');
     Route::post('/orders/{order}/reject', [AdminOrderController::class, 'reject'])->name('orders.reject');
     Route::post('/orders/{order}/complete', [AdminOrderController::class, 'complete'])->name('orders.complete');
+    Route::put('/orders/{order}/imei', [AdminOrderController::class, 'updateImei'])->name('orders.update-imei');
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:superadmin'])->group(function () {
